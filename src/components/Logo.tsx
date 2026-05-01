@@ -1,13 +1,15 @@
-import logo from "@/assets/logo-cropped.png";
+import logo from "@/assets/logo-mark.png";
 
-export function Logo({ className = "h-12" }: { className?: string }) {
+export function Logo({ className = "h-12", priority = false }: { className?: string; priority?: boolean }) {
   return (
     <img
       src={logo}
-      alt="Pizza d'Casa"
+      alt="Pizza d'Casa — Pizzaria artesanal"
       className={className}
-      loading="eager"
+      loading={priority ? "eager" : "lazy"}
       decoding="async"
+      width={1536}
+      height={1024}
     />
   );
 }
