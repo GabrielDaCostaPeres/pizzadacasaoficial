@@ -1,153 +1,257 @@
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useCart } from "@/cart/CartContext";
-import { brl } from "@/lib/format";
+import { brl, buildWhatsAppUrl } from "@/lib/format";
 import { WHATSAPP_NUMBER, DELIVERY_FEE } from "@/data/menu";
-import { X, Plus, Minus, ShoppingBag, Trash2 } from "lucide-react";
+import { X, Plus, Minus, ShoppingBag, Trash2, MapPin, Wallet, MessageCircle, Check } from "lucide-react";
+
+type Mode = "entrega" | "retirada";
 
 export function CartDrawer() {
   const { lines, open, setOpen, inc, dec, remove, total, clear } = useCart();
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [mode, setMode] = useState<"entrega" | "retirada">("entrega");
+  const [mode, setMode] = useState<Mode>("entrega");
   const [payment, setPayment] = useState("Pix");
+  const [troco, setTroco] = useState("");
   const [obs, setObs] = useState("");
+  const [showErrors, setShowErrors] = useState(false);
+  const linkRef = useRef<HTMLAnchorElement>(null);
 
   const fee = mode === "entrega" ? DELIVERY_FEE : 0;
   const grandTotal = total + fee;
 
-  function sendWhatsApp() {
-    if (lines.length === 0) return;
-    const itensTxt = lines.map(l =>
-      `• ${l.qty}x ${l.name}${l.note ? ` _(${l.note})_` : ""} — ${brl(l.unitPrice * l.qty)}`
-    ).join("\n");
+  const errors = useMemo(() => {
+    const e: Record<string, string> = {};
+    if (!name.trim()) e.name = "Informe seu nome";
+    if (mode === "entrega" && address.trim().length < 6) e.address = "Endereço completo";
+    return e;
+  }, [name, address, mode]);
 
-    const msg =
-`*🍕 Novo Pedido — Pizza d'Casa*
+  const message = useMemo(() => {
+    if (lines.length === 0) return "";
+    const itensTxt = lines
+      .map(l => `• ${l.qty}x ${l.name}${l.note ? ` _(${l.note})_` : ""} — ${brl(l.unitPrice * l.qty)}`)
+      .join("\n");
+    return `*🍕 Novo Pedido — Pizza d'Casa*
 
-*Cliente:* ${name || "—"}
+*Cliente:* ${name || "—"}${phone ? `\n*Telefone:* ${phone}` : ""}
 *Modalidade:* ${mode === "entrega" ? "Entrega" : "Retirada no local"}
-${mode === "entrega" ? `*Endereço:* ${address || "—"}\n` : ""}*Pagamento:* ${payment}
+${mode === "entrega" ? `*Endereço:* ${address || "—"}\n` : ""}*Pagamento:* ${payment}${payment === "Dinheiro" && troco ? ` (troco para ${troco})` : ""}
 ${obs ? `*Observações:* ${obs}\n` : ""}
 *Itens:*
 ${itensTxt}
 
 *Subtotal:* ${brl(total)}
 ${mode === "entrega" ? `*Taxa de entrega:* ${brl(fee)}\n` : ""}*Total:* ${brl(grandTotal)}`;
+  }, [lines, name, phone, mode, address, payment, troco, obs, total, fee, grandTotal]);
 
-    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-    window.open(url, "_blank");
+  const waUrl = useMemo(() => buildWhatsAppUrl(WHATSAPP_NUMBER, message), [message]);
+
+  function handleSendClick(e: React.MouseEvent<HTMLAnchorElement>) {
+    if (lines.length === 0) { e.preventDefault(); return; }
+    if (Object.keys(errors).length > 0) {
+      e.preventDefault();
+      setShowErrors(true);
+    }
   }
 
   return (
     <>
-      {/* overlay */}
       <div
         onClick={() => setOpen(false)}
-        className={`fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
+        className={`fixed inset-0 z-40 bg-black/70 backdrop-blur-sm transition-opacity duration-300 ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
+        aria-hidden
       />
-      {/* drawer */}
       <aside
-        className={`fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col bg-deep border-l border-gold/20 shadow-elegant transition-transform duration-300 ${open ? "translate-x-0" : "translate-x-full"}`}
+        className={`fixed inset-x-0 bottom-0 sm:inset-y-0 sm:right-0 sm:left-auto z-50 flex flex-col bg-deep border-gold/20 shadow-elegant transition-transform duration-300
+          h-[92vh] sm:h-full w-full sm:max-w-md
+          rounded-t-2xl sm:rounded-none border-t sm:border-t-0 sm:border-l
+          ${open ? "translate-y-0 sm:translate-x-0" : "translate-y-full sm:translate-y-0 sm:translate-x-full"}`}
         aria-hidden={!open}
+        aria-label="Carrinho de pedidos"
       >
-        <header className="flex items-center justify-between p-5 border-b border-gold/20">
+        {/* mobile grabber */}
+        <div className="sm:hidden flex justify-center pt-2 pb-1">
+          <span className="h-1 w-10 rounded-full bg-cream/20" />
+        </div>
+
+        <header className="flex items-center justify-between px-5 pt-3 sm:pt-5 pb-4 border-b border-gold/15">
           <div className="flex items-center gap-2">
             <ShoppingBag className="h-5 w-5 text-gold" />
             <h2 className="font-display text-2xl text-cream">Seu pedido</h2>
           </div>
-          <button onClick={() => setOpen(false)} className="rounded-full p-2 hover:bg-cream/10 text-cream" aria-label="Fechar">
+          <button onClick={() => setOpen(false)} className="rounded-full p-2 hover:bg-cream/10 text-cream/80" aria-label="Fechar">
             <X className="h-5 w-5" />
           </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
+        <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4 space-y-3">
           {lines.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center text-center text-cream/60 py-16">
               <ShoppingBag className="h-12 w-12 mb-4 opacity-40" />
-              <p>Seu carrinho está vazio</p>
+              <p className="font-display text-xl text-cream">Seu carrinho está vazio</p>
               <p className="text-sm mt-1">Escolha seus sabores no cardápio</p>
+              <button
+                onClick={() => setOpen(false)}
+                className="mt-6 rounded-full gradient-gold text-[var(--primary-foreground)] font-semibold px-6 py-2.5 text-sm shadow-gold"
+              >
+                Ver cardápio
+              </button>
             </div>
-          ) : lines.map(l => (
-            <div key={l.id} className="rounded-lg border border-cream/10 bg-cream/[0.03] p-3">
-              <div className="flex justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="font-medium text-cream truncate">{l.name}</p>
-                  {l.note && <p className="text-xs text-cream/60 mt-0.5">{l.note}</p>}
-                  <p className="text-sm text-gold mt-1">{brl(l.unitPrice)}</p>
+          ) : (
+            <>
+              {lines.map(l => (
+                <div key={l.id} className="rounded-xl border border-cream/10 bg-cream/[0.03] p-3.5">
+                  <div className="flex justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-medium text-cream text-[15px] leading-snug">{l.name}</p>
+                      {l.note && <p className="text-[11px] uppercase tracking-wider text-gold/80 mt-1">{l.note}</p>}
+                      <p className="text-sm text-cream/60 mt-1">{brl(l.unitPrice)} un.</p>
+                    </div>
+                    <button onClick={() => remove(l.id)} className="text-cream/40 hover:text-destructive p-1 self-start" aria-label="Remover">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <div className="mt-3 flex items-center justify-between">
+                    <div className="flex items-center gap-1 rounded-full border border-gold/30 bg-deep">
+                      <button onClick={() => dec(l.id)} className="p-2 text-gold hover:text-cream" aria-label="Diminuir"><Minus className="h-3.5 w-3.5" /></button>
+                      <span className="min-w-7 text-center text-cream text-sm font-semibold">{l.qty}</span>
+                      <button onClick={() => inc(l.id)} className="p-2 text-gold hover:text-cream" aria-label="Aumentar"><Plus className="h-3.5 w-3.5" /></button>
+                    </div>
+                    <span className="font-semibold text-gold">{brl(l.unitPrice * l.qty)}</span>
+                  </div>
                 </div>
-                <button onClick={() => remove(l.id)} className="text-cream/50 hover:text-destructive p-1" aria-label="Remover">
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </div>
-              <div className="mt-3 flex items-center justify-between">
-                <div className="flex items-center gap-2 rounded-full border border-gold/30 bg-deep px-1">
-                  <button onClick={() => dec(l.id)} className="p-1.5 text-gold hover:text-cream" aria-label="Diminuir"><Minus className="h-3.5 w-3.5" /></button>
-                  <span className="min-w-6 text-center text-cream text-sm font-medium">{l.qty}</span>
-                  <button onClick={() => inc(l.id)} className="p-1.5 text-gold hover:text-cream" aria-label="Aumentar"><Plus className="h-3.5 w-3.5" /></button>
+              ))}
+
+              {/* Checkout */}
+              <div className="pt-2 space-y-4">
+                <SectionTitle icon={<MapPin className="h-4 w-4" />}>Como deseja receber?</SectionTitle>
+                <div className="grid grid-cols-2 gap-2">
+                  <ToggleBtn active={mode==="entrega"} onClick={() => setMode("entrega")}>Entrega</ToggleBtn>
+                  <ToggleBtn active={mode==="retirada"} onClick={() => setMode("retirada")}>Retirar no local</ToggleBtn>
                 </div>
-                <span className="font-medium text-cream">{brl(l.unitPrice * l.qty)}</span>
+
+                <div className="space-y-2.5">
+                  <Field
+                    label="Seu nome"
+                    value={name} onChange={setName}
+                    error={showErrors ? errors.name : undefined}
+                    autoComplete="name"
+                  />
+                  <Field
+                    label="Telefone (opcional)"
+                    value={phone} onChange={setPhone}
+                    inputMode="tel" autoComplete="tel"
+                  />
+                  {mode === "entrega" && (
+                    <Field
+                      label="Endereço completo (rua, nº, bairro)"
+                      value={address} onChange={setAddress}
+                      error={showErrors ? errors.address : undefined}
+                      autoComplete="street-address"
+                    />
+                  )}
+                </div>
+
+                <SectionTitle icon={<Wallet className="h-4 w-4" />}>Forma de pagamento</SectionTitle>
+                <div className="grid grid-cols-2 gap-2">
+                  {["Pix", "Dinheiro", "Cartão de débito", "Cartão de crédito"].map(p => (
+                    <ToggleBtn key={p} active={payment===p} onClick={() => setPayment(p)}>{p}</ToggleBtn>
+                  ))}
+                </div>
+                {payment === "Dinheiro" && (
+                  <Field
+                    label="Troco para quanto? (opcional)"
+                    value={troco} onChange={setTroco}
+                    inputMode="decimal"
+                  />
+                )}
+
+                <textarea
+                  value={obs} onChange={e => setObs(e.target.value)} placeholder="Observações (opcional)" rows={2}
+                  className="w-full rounded-lg bg-cream/5 border border-cream/15 px-3 py-2 text-sm text-cream placeholder:text-cream/40 focus:border-gold outline-none resize-none"
+                />
               </div>
-            </div>
-          ))}
+            </>
+          )}
         </div>
 
         {lines.length > 0 && (
-          <div className="border-t border-gold/20 p-5 space-y-3 max-h-[55vh] overflow-y-auto">
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => setMode("entrega")}
-                className={`rounded-md py-2 text-sm font-medium border transition ${mode==="entrega" ? "bg-gold text-[var(--primary-foreground)] border-gold" : "border-cream/20 text-cream hover:border-gold/50"}`}
-              >Entrega</button>
-              <button
-                onClick={() => setMode("retirada")}
-                className={`rounded-md py-2 text-sm font-medium border transition ${mode==="retirada" ? "bg-gold text-[var(--primary-foreground)] border-gold" : "border-cream/20 text-cream hover:border-gold/50"}`}
-              >Retirada</button>
-            </div>
-
-            <input
-              value={name} onChange={e => setName(e.target.value)} placeholder="Seu nome"
-              className="w-full rounded-md bg-cream/5 border border-cream/15 px-3 py-2 text-sm text-cream placeholder:text-cream/40 focus:border-gold outline-none"
-            />
-            {mode === "entrega" && (
-              <input
-                value={address} onChange={e => setAddress(e.target.value)} placeholder="Endereço completo (rua, nº, bairro)"
-                className="w-full rounded-md bg-cream/5 border border-cream/15 px-3 py-2 text-sm text-cream placeholder:text-cream/40 focus:border-gold outline-none"
-              />
-            )}
-            <select
-              value={payment} onChange={e => setPayment(e.target.value)}
-              className="w-full rounded-md bg-cream/5 border border-cream/15 px-3 py-2 text-sm text-cream focus:border-gold outline-none"
-            >
-              <option className="bg-deep">Pix</option>
-              <option className="bg-deep">Dinheiro</option>
-              <option className="bg-deep">Cartão de débito</option>
-              <option className="bg-deep">Cartão de crédito</option>
-            </select>
-            <textarea
-              value={obs} onChange={e => setObs(e.target.value)} placeholder="Observações (opcional)" rows={2}
-              className="w-full rounded-md bg-cream/5 border border-cream/15 px-3 py-2 text-sm text-cream placeholder:text-cream/40 focus:border-gold outline-none resize-none"
-            />
-
-            <div className="space-y-1 pt-2 text-sm">
+          <div className="border-t border-gold/20 p-4 sm:p-5 bg-deep/95 backdrop-blur-sm">
+            <div className="space-y-1 text-sm mb-3">
               <div className="flex justify-between text-cream/70"><span>Subtotal</span><span>{brl(total)}</span></div>
               {mode === "entrega" && <div className="flex justify-between text-cream/70"><span>Taxa de entrega</span><span>{brl(fee)}</span></div>}
-              <div className="flex justify-between text-lg font-semibold text-cream pt-1 border-t border-cream/10 mt-1">
-                <span>Total</span><span className="text-gold">{brl(grandTotal)}</span>
+              <div className="flex justify-between text-base font-semibold text-cream pt-2 border-t border-cream/10 mt-1">
+                <span>Total</span><span className="text-gold text-lg">{brl(grandTotal)}</span>
               </div>
             </div>
 
-            <button
-              onClick={sendWhatsApp}
-              className="w-full rounded-md gradient-gold text-[var(--primary-foreground)] font-semibold py-3 shadow-gold hover:opacity-95 transition"
+            <a
+              ref={linkRef}
+              href={waUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleSendClick}
+              className="flex items-center justify-center gap-2 w-full rounded-xl gradient-gold text-[var(--primary-foreground)] font-semibold py-3.5 shadow-gold active:scale-[0.99] transition select-none"
             >
+              <MessageCircle className="h-5 w-5" />
               Enviar pedido pelo WhatsApp
-            </button>
-            <button onClick={clear} className="w-full text-xs text-cream/50 hover:text-cream/80 py-1">
+            </a>
+            <p className="text-[11px] text-cream/45 text-center mt-2">
+              Você será redirecionado ao WhatsApp para confirmar o pedido.
+            </p>
+            <button onClick={clear} className="w-full text-xs text-cream/40 hover:text-cream/70 py-2 mt-1">
               Limpar carrinho
             </button>
           </div>
         )}
       </aside>
     </>
+  );
+}
+
+function SectionTitle({ children, icon }: { children: React.ReactNode; icon?: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-2 text-gold text-[11px] uppercase tracking-[0.2em] font-medium pt-1">
+      {icon}{children}
+    </div>
+  );
+}
+
+function ToggleBtn({ active, children, onClick }: { active: boolean; children: React.ReactNode; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`relative rounded-lg py-2.5 text-sm font-medium border transition ${
+        active
+          ? "bg-gold text-[var(--primary-foreground)] border-gold shadow-gold"
+          : "border-cream/15 text-cream/85 bg-cream/[0.03] hover:border-gold/50"
+      }`}
+    >
+      {active && <Check className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5" />}
+      {children}
+    </button>
+  );
+}
+
+function Field({
+  label, value, onChange, error, ...rest
+}: {
+  label: string; value: string; onChange: (v: string) => void; error?: string;
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "value" | "onChange">) {
+  return (
+    <div>
+      <input
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={label}
+        className={`w-full rounded-lg bg-cream/5 border px-3 py-2.5 text-sm text-cream placeholder:text-cream/40 focus:border-gold outline-none transition ${
+          error ? "border-destructive/70" : "border-cream/15"
+        }`}
+        {...rest}
+      />
+      {error && <p className="text-[11px] text-destructive mt-1 ml-1">{error}</p>}
+    </div>
   );
 }
