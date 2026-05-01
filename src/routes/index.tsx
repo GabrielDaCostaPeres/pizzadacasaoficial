@@ -56,7 +56,7 @@ function Hero() {
         <p className="text-gold text-xs sm:text-sm uppercase tracking-[0.4em] mb-6 animate-in fade-in duration-700">
           Pizzaria artesanal
         </p>
-        <Logo className="mx-auto h-28 sm:h-40 md:h-48 w-auto animate-in fade-in zoom-in-95 duration-1000" />
+        <Logo priority className="mx-auto h-28 sm:h-40 md:h-48 w-auto animate-in fade-in zoom-in-95 duration-1000" />
 
         <p className="mt-8 max-w-2xl mx-auto text-base sm:text-xl text-cream/75 leading-relaxed font-serif italic">
           Massa fermentada, ingredientes selecionados e o sabor inconfundível da casa.
