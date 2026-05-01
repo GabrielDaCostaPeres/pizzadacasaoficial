@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 import { useCart } from "@/cart/CartContext";
-import { ShoppingBag, Menu, X } from "lucide-react";
+import { ShoppingBag, Menu, X, Clock } from "lucide-react";
 
 const links = [
   { href: "#cardapio", label: "Cardápio" },
@@ -23,6 +23,14 @@ export function Header() {
 
   return (
     <header className={`sticky top-0 z-30 transition-all ${scrolled ? "bg-deep/95 backdrop-blur-md border-b border-gold/15 shadow-elegant" : "bg-transparent"}`}>
+      <div className="hidden sm:block bg-deep/80 border-b border-gold/10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 h-8 flex items-center justify-end gap-2 text-[11px] tracking-wide text-cream/70">
+          <Clock className="h-3 w-3 text-gold" />
+          <span>Ter — Dom · 19h às 23h</span>
+          <span className="text-cream/30">·</span>
+          <span className="text-cream/55">Segunda fechada</span>
+        </div>
+      </div>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 flex items-center justify-between h-16 sm:h-20">
         <a href="#top" className="flex items-center" aria-label="Pizza d'Casa">
           <Logo className="h-10 sm:h-12 w-auto" />

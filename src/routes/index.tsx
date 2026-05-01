@@ -157,10 +157,40 @@ function Contact() {
 }
 
 function Footer() {
+  const schedule = [
+    { day: "Segunda-feira", hours: "Fechada", closed: true },
+    { day: "Terça-feira", hours: "19h às 23h" },
+    { day: "Quarta-feira", hours: "19h às 23h" },
+    { day: "Quinta-feira", hours: "19h às 23h" },
+    { day: "Sexta-feira", hours: "19h às 23h" },
+    { day: "Sábado", hours: "19h às 23h" },
+    { day: "Domingo", hours: "19h às 23h" },
+  ];
   return (
-    <footer className="py-10 text-center">
-      <Logo className="mx-auto h-14 w-auto opacity-80" />
-      <p className="mt-4 text-cream/50 text-xs">© {new Date().getFullYear()} Pizza d'Casa. Todos os direitos reservados.</p>
+    <footer className="border-t border-gold/10 bg-cream/[0.02]">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 py-12 grid sm:grid-cols-2 gap-10 items-start">
+        <div className="text-center sm:text-left">
+          <Logo className="mx-auto sm:mx-0 h-14 w-auto opacity-90" />
+          <p className="mt-4 text-cream/70 text-sm font-serif italic max-w-xs mx-auto sm:mx-0">
+            Pizzas artesanais, feitas com tempo e tradição da casa.
+          </p>
+        </div>
+        <div>
+          <div className="flex items-center gap-2 mb-4 justify-center sm:justify-start">
+            <Clock className="h-4 w-4 text-gold" />
+            <h3 className="font-display text-lg text-cream">Horário de funcionamento</h3>
+          </div>
+          <ul className="text-sm divide-y divide-gold/10 border-y border-gold/10">
+            {schedule.map(s => (
+              <li key={s.day} className="flex items-center justify-between py-2">
+                <span className="text-cream/80">{s.day}</span>
+                <span className={s.closed ? "text-cream/40" : "text-gold"}>{s.hours}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <p className="text-center pb-6 text-cream/50 text-xs">© {new Date().getFullYear()} Pizza d'Casa. Todos os direitos reservados.</p>
     </footer>
   );
 }
