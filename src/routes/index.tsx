@@ -52,7 +52,7 @@ function Hero() {
         <Leaf className="w-full h-full text-gold" strokeWidth={0.5} />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 py-20 sm:py-32 md:py-40 text-center">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 py-14 sm:py-32 md:py-40 text-center">
         <p className="text-gold text-xs sm:text-sm uppercase tracking-[0.4em] mb-6 animate-in fade-in duration-700">
           Pizzaria artesanal
         </p>
