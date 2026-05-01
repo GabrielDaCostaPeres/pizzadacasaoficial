@@ -2,16 +2,11 @@ export const brl = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 /**
- * Build a WhatsApp URL that works reliably on mobile and desktop.
- * Uses api.whatsapp.com on desktop and wa.me on mobile to maximize the
- * chance of opening the right surface (web vs app) without being blocked.
+ * Build a WhatsApp URL. Always uses wa.me — it's the official short link
+ * supported on both mobile and desktop and is not blocked inside iframes
+ * (unlike api.whatsapp.com/send, which often refuses to load).
  */
 export function buildWhatsAppUrl(phone: string, text: string) {
-  const encoded = encodeURIComponent(text);
-  const isMobile =
-    typeof navigator !== "undefined" &&
-    /android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent);
-  return isMobile
-    ? `https://wa.me/${phone}?text=${encoded}`
-    : `https://api.whatsapp.com/send?phone=${phone}&text=${encoded}`;
+  const cleanPhone = phone.replace(/\D/g, "");
+  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`;
 }
