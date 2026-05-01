@@ -84,22 +84,17 @@ function Hero() {
 
 function Highlights() {
   const items = [
-    { icon: Flame, title: "Sabor da casa", text: "Receitas artesanais." },
-    { icon: Clock, title: "Pedido rápido", text: "Direto no WhatsApp." },
-    { icon: MapPin, title: "Entrega ágil", text: `Taxa única ${brl(DELIVERY_FEE)}.` },
+    { icon: Flame, title: "Sabor da casa" },
+    { icon: Clock, title: "Pedido rápido" },
+    { icon: MapPin, title: `Entrega ${brl(DELIVERY_FEE)}` },
   ];
   return (
-    <section className="py-6 sm:py-10 border-y border-gold/10 bg-cream/[0.02]">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 grid grid-cols-3 gap-3 sm:gap-8">
-        {items.map(({ icon: Icon, title, text }) => (
-          <div key={title} className="flex flex-col sm:flex-row items-center sm:items-center gap-2 sm:gap-3 text-center sm:text-left">
-            <div className="grid place-items-center h-9 w-9 sm:h-11 sm:w-11 rounded-full border border-gold/40 text-gold shrink-0">
-              <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
-            </div>
-            <div className="min-w-0">
-              <h3 className="font-display text-xs sm:text-base text-cream leading-tight">{title}</h3>
-              <p className="text-cream/60 text-[10px] sm:text-xs mt-0.5 sm:mt-1 leading-tight">{text}</p>
-            </div>
+    <section className="py-4 sm:py-6 border-y border-gold/10">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 flex items-center justify-between sm:justify-around gap-2">
+        {items.map(({ icon: Icon, title }) => (
+          <div key={title} className="flex items-center gap-2 text-cream/80">
+            <Icon className="h-4 w-4 text-gold shrink-0" />
+            <span className="text-[11px] sm:text-sm font-medium tracking-wide">{title}</span>
           </div>
         ))}
       </div>
