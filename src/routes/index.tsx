@@ -52,7 +52,7 @@ function Hero() {
         <Leaf className="w-full h-full text-gold" strokeWidth={0.5} />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 py-20 sm:py-32 md:py-40 text-center">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 py-14 sm:py-32 md:py-40 text-center">
         <p className="text-gold text-xs sm:text-sm uppercase tracking-[0.4em] mb-6 animate-in fade-in duration-700">
           Pizzaria artesanal
         </p>
@@ -65,23 +65,17 @@ function Hero() {
         <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center items-center">
           <a
             href="#cardapio"
-            className="inline-flex items-center justify-center rounded-full gradient-gold text-[var(--primary-foreground)] font-semibold px-8 py-3.5 shadow-gold hover:scale-[1.02] transition"
+            className="inline-flex items-center justify-center rounded-full gradient-gold text-[var(--primary-foreground)] font-semibold px-7 py-3 text-sm shadow-gold hover:scale-[1.02] transition"
           >
-            Ver cardápio completo
+            Peça agora · entrega rápida 🍕
           </a>
           <a
             href={`https://wa.me/${WHATSAPP_NUMBER}`}
-            target="_blank" rel="noopener"
-            className="inline-flex items-center justify-center rounded-full border border-gold/50 text-cream font-medium px-8 py-3.5 hover:bg-gold/10 transition"
+            target="_blank" rel="noopener noreferrer"
+            className="text-cream/70 hover:text-gold text-sm underline-offset-4 hover:underline transition"
           >
-            Pedir pelo WhatsApp
+            ou fale no WhatsApp
           </a>
-        </div>
-
-        <div className="mt-12 flex flex-wrap justify-center items-center gap-x-8 gap-y-3 text-cream/60 text-xs sm:text-sm">
-          <span className="flex items-center gap-1.5"><Star className="h-3.5 w-3.5 text-gold" /> Massa artesanal</span>
-          <span className="flex items-center gap-1.5"><Flame className="h-3.5 w-3.5 text-gold" /> Forno tradicional</span>
-          <span className="flex items-center gap-1.5"><Leaf className="h-3.5 w-3.5 text-gold" /> Ingredientes frescos</span>
         </div>
       </div>
     </section>
@@ -90,21 +84,21 @@ function Hero() {
 
 function Highlights() {
   const items = [
-    { icon: Flame, title: "Sabor da casa", text: "Receitas tradicionais com toque artesanal em cada fatia." },
-    { icon: Clock,  title: "Pedido rápido", text: "Monte seu pedido aqui e envie direto ao nosso WhatsApp." },
-    { icon: MapPin, title: "Entrega ágil", text: `Entregamos com taxa única de ${brl(DELIVERY_FEE)}.` },
+    { icon: Flame, title: "Sabor da casa", text: "Receitas artesanais." },
+    { icon: Clock, title: "Pedido rápido", text: "Direto no WhatsApp." },
+    { icon: MapPin, title: "Entrega ágil", text: `Taxa única ${brl(DELIVERY_FEE)}.` },
   ];
   return (
-    <section className="py-16 border-y border-gold/10 bg-cream/[0.02]">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 grid sm:grid-cols-3 gap-8">
+    <section className="py-6 sm:py-10 border-y border-gold/10 bg-cream/[0.02]">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 grid grid-cols-3 gap-3 sm:gap-8">
         {items.map(({ icon: Icon, title, text }) => (
-          <div key={title} className="text-center sm:text-left flex flex-col sm:flex-row items-center sm:items-start gap-4">
-            <div className="grid place-items-center h-12 w-12 rounded-full border border-gold/40 text-gold shrink-0">
-              <Icon className="h-5 w-5" />
+          <div key={title} className="flex flex-col sm:flex-row items-center sm:items-center gap-2 sm:gap-3 text-center sm:text-left">
+            <div className="grid place-items-center h-9 w-9 sm:h-11 sm:w-11 rounded-full border border-gold/40 text-gold shrink-0">
+              <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
-            <div>
-              <h3 className="font-display text-xl text-cream">{title}</h3>
-              <p className="text-cream/65 text-sm mt-1">{text}</p>
+            <div className="min-w-0">
+              <h3 className="font-display text-xs sm:text-base text-cream leading-tight">{title}</h3>
+              <p className="text-cream/60 text-[10px] sm:text-xs mt-0.5 sm:mt-1 leading-tight">{text}</p>
             </div>
           </div>
         ))}
