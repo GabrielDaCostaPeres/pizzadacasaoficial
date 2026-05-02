@@ -99,54 +99,55 @@ export function Menu() {
 function PizzaCategoryBlock({ cat, onAdd }: { cat: typeof pizzaCategories[number]; onAdd: (l: { id: string; name: string; unitPrice: number; note?: string }) => void }) {
   return (
     <div id={cat.id} className="scroll-mt-44">
-      <header className="text-center mb-8">
-        <p className="text-gold/80 uppercase tracking-[0.3em] text-[10px] mb-2">{cat.subtitle}</p>
-        <h3 className="font-display text-3xl sm:text-4xl text-cream">
-          <span className="font-script text-gold italic">{cat.title}</span>
-        </h3>
-      </header>
+      {/* Vintage-style menu card */}
+      <div className="relative rounded-[28px] border border-gold/30 bg-gradient-to-b from-cream/[0.06] via-cream/[0.03] to-transparent px-4 sm:px-10 py-8 sm:py-12 shadow-elegant">
+        {/* Ornamental header */}
+        <header className="text-center mb-6">
+          <div className="flex items-center justify-center gap-3 sm:gap-5">
+            <span className="h-px w-10 sm:w-20 bg-gold/60" />
+            <h3 className="font-script text-gold italic text-3xl sm:text-5xl leading-none">{cat.title.replace("Pizzas ", "Pizzas ")}</h3>
+            <span className="h-px w-10 sm:w-20 bg-gold/60" />
+          </div>
+          <p className="mt-2 text-gold/90 uppercase tracking-[0.45em] text-[11px] sm:text-xs">{cat.subtitle}</p>
+        </header>
 
-      {/* Pricing table */}
-      <div className="rounded-2xl border border-gold/25 bg-gradient-to-b from-cream/[0.04] to-transparent p-4 sm:p-6 mb-8 shadow-elegant">
-        <p className="text-center text-[10px] uppercase tracking-[0.3em] text-cream/55 mb-3">Tamanhos & Preços</p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
+        {/* Prices grid (4 columns like the print) */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8 pb-6 border-b border-gold/20">
           {cat.prices.map((p) => (
-            <div key={p.slices} className="text-center rounded-xl bg-deep/40 border border-gold/10 py-3 px-2">
-              <p className="font-display text-base sm:text-lg text-cream">{p.slices}</p>
-              <p className="text-cream/55 text-[10px] uppercase tracking-wider mt-0.5">{p.flavors}</p>
-              <p className="text-gold font-semibold text-lg sm:text-xl mt-2">{brl(p.price)}</p>
+            <div key={p.slices} className="text-center">
+              <p className="font-display text-cream text-sm sm:text-base">{p.slices}</p>
+              <p className="text-cream/60 text-[10px] sm:text-xs italic">({p.flavors})</p>
+              <p className="text-gold font-semibold text-base sm:text-lg mt-1 tabular-nums">{brl(p.price)}</p>
             </div>
           ))}
         </div>
-        {cat.borderNote && <p className="text-center text-xs text-gold/70 mt-4 italic">✦ {cat.borderNote}</p>}
-      </div>
 
-      <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
-        {cat.pizzas.map(p => (
-          <PizzaRow key={p.name} pizza={p} cat={cat} onAdd={onAdd} />
-        ))}
+        {/* Pizza list — text-style like the printed menu */}
+        <ul className="divide-y divide-gold/10">
+          {cat.pizzas.map(p => (
+            <PizzaRow key={p.name} pizza={p} cat={cat} onAdd={onAdd} />
+          ))}
+        </ul>
+
+        {/* Footer note */}
+        <p className="text-center text-[10px] sm:text-xs text-cream/55 mt-6 italic uppercase tracking-wider">
+          ✶ Todas as pizzas {cat.subtitle.toLowerCase()} contêm molho de tomate e orégano
+        </p>
+        {cat.borderNote && (
+          <p className="text-center text-xs sm:text-sm text-gold mt-3 font-medium">
+            <span className="uppercase tracking-wider">Bordas:</span> {cat.borderNote.replace(/^Bordas:\s*/i, "")}
+          </p>
+        )}
       </div>
     </div>
   );
 }
 
 function PizzaRow({ pizza, cat, onAdd }: { pizza: { name: string; description: string }; cat: typeof pizzaCategories[number]; onAdd: (l: { id: string; name: string; unitPrice: number; note?: string }) => void }) {
+  const [open, setOpen] = useState(false);
   const [size, setSize] = useState(cat.prices[2] ?? cat.prices[0]);
   const [border, setBorder] = useState<{ name: string; price: number } | null>(null);
-  const [openSize, setOpenSize] = useState(false);
-  const [openBorder, setOpenBorder] = useState(false);
   const [added, setAdded] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const refB = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const onDown = (e: MouseEvent) => {
-      if (openSize && !ref.current?.contains(e.target as Node)) setOpenSize(false);
-      if (openBorder && !refB.current?.contains(e.target as Node)) setOpenBorder(false);
-    };
-    window.addEventListener("mousedown", onDown);
-    return () => window.removeEventListener("mousedown", onDown);
-  }, [openSize, openBorder]);
 
   const totalPrice = size.price + (border?.price ?? 0);
 
@@ -159,101 +160,89 @@ function PizzaRow({ pizza, cat, onAdd }: { pizza: { name: string; description: s
       note: `${cat.title} · ${cat.subtitle}`,
     });
     setAdded(true);
+    setOpen(false);
     setTimeout(() => setAdded(false), 1200);
   }
 
   return (
-    <article className="group rounded-xl border border-cream/10 bg-cream/[0.02] p-4 sm:p-5 hover:border-gold/40 hover:bg-cream/[0.04] transition">
-      <div className="min-w-0">
-        <h4 className="font-display text-base sm:text-lg text-cream uppercase tracking-wide leading-tight">{pizza.name}</h4>
-        <p className="text-cream/65 text-sm mt-1.5 leading-relaxed">{pizza.description}</p>
-      </div>
+    <li className="py-3 sm:py-4">
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="w-full text-left group"
+        aria-expanded={open}
+      >
+        <div className="flex items-baseline justify-between gap-3">
+          <h4 className="font-display text-cream uppercase tracking-wide text-sm sm:text-base group-hover:text-gold transition">
+            {pizza.name}
+          </h4>
+          <ChevronDown className={`h-4 w-4 text-gold/70 shrink-0 transition ${open ? "rotate-180" : ""}`} />
+        </div>
+        <p className="text-cream/65 text-xs sm:text-sm leading-snug mt-0.5">{pizza.description}</p>
+      </button>
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="relative" ref={ref}>
-            <button
-              onClick={() => { setOpenSize(v => !v); setOpenBorder(false); }}
-              className="inline-flex items-center gap-1.5 rounded-full border border-cream/20 bg-deep px-3 py-1.5 text-xs text-cream hover:border-gold/50"
-              aria-haspopup="listbox"
-              aria-expanded={openSize}
-            >
-              {size.slices} <ChevronDown className={`h-3 w-3 transition ${openSize ? "rotate-180" : ""}`} />
-            </button>
-            {openSize && (
-              <ul role="listbox" className="absolute left-0 bottom-full mb-1 z-20 w-48 rounded-lg border border-gold/30 bg-deep shadow-elegant overflow-hidden">
-                {cat.prices.map(p => (
-                  <li key={p.slices}>
-                    <button
-                      onClick={() => { setSize(p); setOpenSize(false); }}
-                      className={`w-full text-left px-3 py-2 text-xs flex justify-between items-center transition ${
-                        p.slices === size.slices ? "bg-gold/15 text-gold" : "text-cream hover:bg-gold hover:text-[var(--primary-foreground)]"
-                      }`}
-                    >
-                      <span>{p.slices}</span><span className="font-semibold">{brl(p.price)}</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
+      {open && (
+        <div className="mt-3 rounded-xl border border-gold/25 bg-deep/60 p-3 sm:p-4 space-y-3">
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-cream/60 mb-1.5">Tamanho</p>
+            <div className="flex flex-wrap gap-1.5">
+              {cat.prices.map(p => (
+                <button
+                  key={p.slices}
+                  onClick={() => setSize(p)}
+                  className={`rounded-full border px-3 py-1.5 text-[11px] transition ${
+                    p.slices === size.slices
+                      ? "border-gold bg-gold text-[var(--primary-foreground)] font-semibold"
+                      : "border-cream/20 text-cream hover:border-gold/50"
+                  }`}
+                >
+                  {p.slices} · {brl(p.price)}
+                </button>
+              ))}
+            </div>
           </div>
 
           {cat.borders && cat.borders.length > 0 && (
-            <div className="relative" ref={refB}>
-              <button
-                onClick={() => { setOpenBorder(v => !v); setOpenSize(false); }}
-                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs transition ${
-                  border ? "border-gold/60 bg-gold/10 text-gold" : "border-cream/20 bg-deep text-cream hover:border-gold/50"
-                }`}
-                aria-haspopup="listbox"
-                aria-expanded={openBorder}
-              >
-                {border ? `Borda: ${border.name}` : "Borda"} <ChevronDown className={`h-3 w-3 transition ${openBorder ? "rotate-180" : ""}`} />
-              </button>
-              {openBorder && (
-                <ul role="listbox" className="absolute left-0 bottom-full mb-1 z-20 w-56 rounded-lg border border-gold/30 bg-deep shadow-elegant overflow-hidden">
-                  <li>
-                    <button
-                      onClick={() => { setBorder(null); setOpenBorder(false); }}
-                      className={`w-full text-left px-3 py-2 text-xs flex justify-between items-center transition ${
-                        !border ? "bg-gold/15 text-gold" : "text-cream hover:bg-gold hover:text-[var(--primary-foreground)]"
-                      }`}
-                    >
-                      <span>Sem borda</span><span className="font-semibold">—</span>
-                    </button>
-                  </li>
-                  {cat.borders.map(b => (
-                    <li key={b.name}>
-                      <button
-                        onClick={() => { setBorder(b); setOpenBorder(false); }}
-                        className={`w-full text-left px-3 py-2 text-xs flex justify-between items-center transition ${
-                          border?.name === b.name ? "bg-gold/15 text-gold" : "text-cream hover:bg-gold hover:text-[var(--primary-foreground)]"
-                        }`}
-                      >
-                        <span>{b.name}</span><span className="font-semibold">+{brl(b.price)}</span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-cream/60 mb-1.5">Borda (opcional)</p>
+              <div className="flex flex-wrap gap-1.5">
+                <button
+                  onClick={() => setBorder(null)}
+                  className={`rounded-full border px-3 py-1.5 text-[11px] transition ${
+                    !border ? "border-gold bg-gold text-[var(--primary-foreground)] font-semibold" : "border-cream/20 text-cream hover:border-gold/50"
+                  }`}
+                >
+                  Sem borda
+                </button>
+                {cat.borders.map(b => (
+                  <button
+                    key={b.name}
+                    onClick={() => setBorder(b)}
+                    className={`rounded-full border px-3 py-1.5 text-[11px] transition ${
+                      border?.name === b.name ? "border-gold bg-gold text-[var(--primary-foreground)] font-semibold" : "border-cream/20 text-cream hover:border-gold/50"
+                    }`}
+                  >
+                    {b.name} +{brl(b.price)}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
-        </div>
 
-        <div className="flex items-center gap-3">
-          <span className="text-gold font-semibold tabular-nums">{brl(totalPrice)}</span>
-          <button
-            onClick={handleAdd}
-            className={`inline-flex items-center justify-center rounded-full h-9 w-9 shadow-gold transition ${
-              added ? "bg-emerald-500 text-white scale-110" : "gradient-gold text-[var(--primary-foreground)] hover:scale-105"
-            }`}
-            aria-label="Adicionar ao pedido"
-          >
-            {added ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-          </button>
+          <div className="flex items-center justify-between pt-1">
+            <span className="text-gold font-semibold tabular-nums text-base">{brl(totalPrice)}</span>
+            <button
+              onClick={handleAdd}
+              className={`inline-flex items-center gap-2 rounded-full px-4 h-9 text-xs font-semibold uppercase tracking-wider shadow-gold transition ${
+                added ? "bg-emerald-500 text-white" : "gradient-gold text-[var(--primary-foreground)] hover:scale-105"
+              }`}
+            >
+              {added ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+              {added ? "Adicionado" : "Adicionar"}
+            </button>
+          </div>
         </div>
-      </div>
-    </article>
+      )}
+    </li>
   );
 }
 
