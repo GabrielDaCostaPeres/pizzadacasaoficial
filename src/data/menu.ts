@@ -35,6 +35,7 @@ export const pizzaCategories: PizzaCategory[] = [
       { slices: "12 Pedaços", flavors: "04 sabores", price: 77.9 },
     ],
     borderNote: "Bordas: catupiry ou cheddar — R$ 14,00",
+    borders: BORDAS_SALGADAS,
     pizzas: [
       { name: "Alho", description: "Muçarela e alho." },
       { name: "Alho II", description: "Muçarela e alho frito." },
@@ -66,6 +67,7 @@ export const pizzaCategories: PizzaCategory[] = [
       { slices: "12 Pedaços", flavors: "04 sabores", price: 79 },
     ],
     borderNote: "Bordas: catupiry ou cheddar — R$ 14,00",
+    borders: BORDAS_SALGADAS,
     pizzas: [
       { name: "Calabacon", description: "Muçarela, calabresa, bacon e cebola." },
       { name: "4 Queijos", description: "Muçarela, catupiry, provolone, parmesão e cheddar." },
@@ -99,6 +101,7 @@ export const pizzaCategories: PizzaCategory[] = [
       { slices: "12 Pedaços", flavors: "04 sabores", price: 87.9 },
     ],
     borderNote: "Bordas: catupiry ou cheddar — R$ 14,00",
+    borders: BORDAS_SALGADAS,
     pizzas: [
       { name: "Filé Mignon", description: "Muçarela, filé mignon, catupiry e cebola." },
       { name: "Filé Mignon com Catupiry", description: "Muçarela, filé mignon e catupiry." },
@@ -124,6 +127,7 @@ export const pizzaCategories: PizzaCategory[] = [
       { slices: "12 Pedaços", flavors: "04 sabores", price: 83.9 },
     ],
     borderNote: "Bordas: chocolate preto ou branco — R$ 15,00",
+    borders: BORDAS_DOCES,
     pizzas: [
       { name: "Dois Amores", description: "Creme de leite, muçarela, chocolate branco e chocolate preto." },
       { name: "Leite Ninho com Morangos", description: "Creme de leite, muçarela, creme de ninho, morangos e leite ninho peneirado." },
@@ -148,6 +152,7 @@ export const pizzaCategories: PizzaCategory[] = [
       { slices: "12 Pedaços", flavors: "04 sabores", price: 79 },
     ],
     borderNote: "Bordas: chocolate preto ou branco — R$ 15,00",
+    borders: BORDAS_DOCES,
     pizzas: [
       { name: "Brigadeiro", description: "Creme de leite, muçarela, chocolate e granulado." },
       { name: "Confete", description: "Creme de leite, muçarela, chocolate e confete." },
