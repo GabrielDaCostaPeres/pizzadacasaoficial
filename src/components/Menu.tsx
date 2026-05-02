@@ -131,26 +131,31 @@ function PizzaCategoryBlock({ cat, onAdd }: { cat: typeof pizzaCategories[number
 }
 
 function PizzaRow({ pizza, cat, onAdd }: { pizza: { name: string; description: string }; cat: typeof pizzaCategories[number]; onAdd: (l: { id: string; name: string; unitPrice: number; note?: string }) => void }) {
-  const [size, setSize] = useState(cat.prices[2] ?? cat.prices[0]); // 8 fatias por padrão
+  const [size, setSize] = useState(cat.prices[2] ?? cat.prices[0]);
+  const [border, setBorder] = useState<{ name: string; price: number } | null>(null);
   const [openSize, setOpenSize] = useState(false);
+  const [openBorder, setOpenBorder] = useState(false);
   const [added, setAdded] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const refB = useRef<HTMLDivElement>(null);
 
-  // close on outside click
   useEffect(() => {
-    if (!openSize) return;
     const onDown = (e: MouseEvent) => {
-      if (!ref.current?.contains(e.target as Node)) setOpenSize(false);
+      if (openSize && !ref.current?.contains(e.target as Node)) setOpenSize(false);
+      if (openBorder && !refB.current?.contains(e.target as Node)) setOpenBorder(false);
     };
     window.addEventListener("mousedown", onDown);
     return () => window.removeEventListener("mousedown", onDown);
-  }, [openSize]);
+  }, [openSize, openBorder]);
+
+  const totalPrice = size.price + (border?.price ?? 0);
 
   function handleAdd() {
+    const borderSuffix = border ? ` + Borda ${border.name}` : "";
     onAdd({
-      id: `${cat.id}-${pizza.name}-${size.slices}`,
-      name: `${pizza.name} (${size.slices})`,
-      unitPrice: size.price,
+      id: `${cat.id}-${pizza.name}-${size.slices}${border ? `-${border.name}` : ""}`,
+      name: `${pizza.name} (${size.slices})${borderSuffix}`,
+      unitPrice: totalPrice,
       note: `${cat.title} · ${cat.subtitle}`,
     });
     setAdded(true);
@@ -164,36 +169,79 @@ function PizzaRow({ pizza, cat, onAdd }: { pizza: { name: string; description: s
         <p className="text-cream/65 text-sm mt-1.5 leading-relaxed">{pizza.description}</p>
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-2">
-        <div className="relative" ref={ref}>
-          <button
-            onClick={() => setOpenSize(v => !v)}
-            className="inline-flex items-center gap-1.5 rounded-full border border-cream/20 bg-deep px-3 py-1.5 text-xs text-cream hover:border-gold/50"
-            aria-haspopup="listbox"
-            aria-expanded={openSize}
-          >
-            {size.slices} <ChevronDown className={`h-3 w-3 transition ${openSize ? "rotate-180" : ""}`} />
-          </button>
-          {openSize && (
-            <ul role="listbox" className="absolute left-0 bottom-full mb-1 z-20 w-48 rounded-lg border border-gold/30 bg-deep shadow-elegant overflow-hidden">
-              {cat.prices.map(p => (
-                <li key={p.slices}>
-                  <button
-                    onClick={() => { setSize(p); setOpenSize(false); }}
-                    className={`w-full text-left px-3 py-2 text-xs flex justify-between items-center transition ${
-                      p.slices === size.slices ? "bg-gold/15 text-gold" : "text-cream hover:bg-gold hover:text-[var(--primary-foreground)]"
-                    }`}
-                  >
-                    <span>{p.slices}</span><span className="font-semibold">{brl(p.price)}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative" ref={ref}>
+            <button
+              onClick={() => { setOpenSize(v => !v); setOpenBorder(false); }}
+              className="inline-flex items-center gap-1.5 rounded-full border border-cream/20 bg-deep px-3 py-1.5 text-xs text-cream hover:border-gold/50"
+              aria-haspopup="listbox"
+              aria-expanded={openSize}
+            >
+              {size.slices} <ChevronDown className={`h-3 w-3 transition ${openSize ? "rotate-180" : ""}`} />
+            </button>
+            {openSize && (
+              <ul role="listbox" className="absolute left-0 bottom-full mb-1 z-20 w-48 rounded-lg border border-gold/30 bg-deep shadow-elegant overflow-hidden">
+                {cat.prices.map(p => (
+                  <li key={p.slices}>
+                    <button
+                      onClick={() => { setSize(p); setOpenSize(false); }}
+                      className={`w-full text-left px-3 py-2 text-xs flex justify-between items-center transition ${
+                        p.slices === size.slices ? "bg-gold/15 text-gold" : "text-cream hover:bg-gold hover:text-[var(--primary-foreground)]"
+                      }`}
+                    >
+                      <span>{p.slices}</span><span className="font-semibold">{brl(p.price)}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          {cat.borders && cat.borders.length > 0 && (
+            <div className="relative" ref={refB}>
+              <button
+                onClick={() => { setOpenBorder(v => !v); setOpenSize(false); }}
+                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs transition ${
+                  border ? "border-gold/60 bg-gold/10 text-gold" : "border-cream/20 bg-deep text-cream hover:border-gold/50"
+                }`}
+                aria-haspopup="listbox"
+                aria-expanded={openBorder}
+              >
+                {border ? `Borda: ${border.name}` : "Borda"} <ChevronDown className={`h-3 w-3 transition ${openBorder ? "rotate-180" : ""}`} />
+              </button>
+              {openBorder && (
+                <ul role="listbox" className="absolute left-0 bottom-full mb-1 z-20 w-56 rounded-lg border border-gold/30 bg-deep shadow-elegant overflow-hidden">
+                  <li>
+                    <button
+                      onClick={() => { setBorder(null); setOpenBorder(false); }}
+                      className={`w-full text-left px-3 py-2 text-xs flex justify-between items-center transition ${
+                        !border ? "bg-gold/15 text-gold" : "text-cream hover:bg-gold hover:text-[var(--primary-foreground)]"
+                      }`}
+                    >
+                      <span>Sem borda</span><span className="font-semibold">—</span>
+                    </button>
+                  </li>
+                  {cat.borders.map(b => (
+                    <li key={b.name}>
+                      <button
+                        onClick={() => { setBorder(b); setOpenBorder(false); }}
+                        className={`w-full text-left px-3 py-2 text-xs flex justify-between items-center transition ${
+                          border?.name === b.name ? "bg-gold/15 text-gold" : "text-cream hover:bg-gold hover:text-[var(--primary-foreground)]"
+                        }`}
+                      >
+                        <span>{b.name}</span><span className="font-semibold">+{brl(b.price)}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           )}
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="text-gold font-semibold tabular-nums">{brl(size.price)}</span>
+          <span className="text-gold font-semibold tabular-nums">{brl(totalPrice)}</span>
           <button
             onClick={handleAdd}
             className={`inline-flex items-center justify-center rounded-full h-9 w-9 shadow-gold transition ${
