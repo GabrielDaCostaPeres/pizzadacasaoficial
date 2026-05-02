@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { pizzaCategories, otherCategories, WHATSAPP_NUMBER } from "@/data/menu";
 import { brl } from "@/lib/format";
 import { useCart } from "@/cart/CartContext";
