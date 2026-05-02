@@ -1,6 +1,8 @@
 export type Pizza = { name: string; description: string };
 export type Item = { name: string; description?: string; price: number | { label: string; value: number }[] };
 
+export type BorderOption = { name: string; price: number };
+
 export type PizzaCategory = {
   id: string;
   title: string;
@@ -8,7 +10,18 @@ export type PizzaCategory = {
   prices: { slices: string; flavors: string; price: number }[];
   pizzas: Pizza[];
   borderNote?: string;
+  borders?: BorderOption[];
 };
+
+const BORDAS_SALGADAS: BorderOption[] = [
+  { name: "Catupiry", price: 14 },
+  { name: "Cheddar", price: 14 },
+];
+
+const BORDAS_DOCES: BorderOption[] = [
+  { name: "Chocolate preto", price: 15 },
+  { name: "Chocolate branco", price: 15 },
+];
 
 export const pizzaCategories: PizzaCategory[] = [
   {
@@ -22,6 +35,7 @@ export const pizzaCategories: PizzaCategory[] = [
       { slices: "12 Pedaços", flavors: "04 sabores", price: 77.9 },
     ],
     borderNote: "Bordas: catupiry ou cheddar — R$ 14,00",
+    borders: BORDAS_SALGADAS,
     pizzas: [
       { name: "Alho", description: "Muçarela e alho." },
       { name: "Alho II", description: "Muçarela e alho frito." },
@@ -53,6 +67,7 @@ export const pizzaCategories: PizzaCategory[] = [
       { slices: "12 Pedaços", flavors: "04 sabores", price: 79 },
     ],
     borderNote: "Bordas: catupiry ou cheddar — R$ 14,00",
+    borders: BORDAS_SALGADAS,
     pizzas: [
       { name: "Calabacon", description: "Muçarela, calabresa, bacon e cebola." },
       { name: "4 Queijos", description: "Muçarela, catupiry, provolone, parmesão e cheddar." },
@@ -86,6 +101,7 @@ export const pizzaCategories: PizzaCategory[] = [
       { slices: "12 Pedaços", flavors: "04 sabores", price: 87.9 },
     ],
     borderNote: "Bordas: catupiry ou cheddar — R$ 14,00",
+    borders: BORDAS_SALGADAS,
     pizzas: [
       { name: "Filé Mignon", description: "Muçarela, filé mignon, catupiry e cebola." },
       { name: "Filé Mignon com Catupiry", description: "Muçarela, filé mignon e catupiry." },
@@ -111,6 +127,7 @@ export const pizzaCategories: PizzaCategory[] = [
       { slices: "12 Pedaços", flavors: "04 sabores", price: 83.9 },
     ],
     borderNote: "Bordas: chocolate preto ou branco — R$ 15,00",
+    borders: BORDAS_DOCES,
     pizzas: [
       { name: "Dois Amores", description: "Creme de leite, muçarela, chocolate branco e chocolate preto." },
       { name: "Leite Ninho com Morangos", description: "Creme de leite, muçarela, creme de ninho, morangos e leite ninho peneirado." },
@@ -135,6 +152,7 @@ export const pizzaCategories: PizzaCategory[] = [
       { slices: "12 Pedaços", flavors: "04 sabores", price: 79 },
     ],
     borderNote: "Bordas: chocolate preto ou branco — R$ 15,00",
+    borders: BORDAS_DOCES,
     pizzas: [
       { name: "Brigadeiro", description: "Creme de leite, muçarela, chocolate e granulado." },
       { name: "Confete", description: "Creme de leite, muçarela, chocolate e confete." },
