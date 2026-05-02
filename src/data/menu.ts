@@ -1,6 +1,8 @@
 export type Pizza = { name: string; description: string };
 export type Item = { name: string; description?: string; price: number | { label: string; value: number }[] };
 
+export type BorderOption = { name: string; price: number };
+
 export type PizzaCategory = {
   id: string;
   title: string;
@@ -8,7 +10,18 @@ export type PizzaCategory = {
   prices: { slices: string; flavors: string; price: number }[];
   pizzas: Pizza[];
   borderNote?: string;
+  borders?: BorderOption[];
 };
+
+const BORDAS_SALGADAS: BorderOption[] = [
+  { name: "Catupiry", price: 14 },
+  { name: "Cheddar", price: 14 },
+];
+
+const BORDAS_DOCES: BorderOption[] = [
+  { name: "Chocolate preto", price: 15 },
+  { name: "Chocolate branco", price: 15 },
+];
 
 export const pizzaCategories: PizzaCategory[] = [
   {
