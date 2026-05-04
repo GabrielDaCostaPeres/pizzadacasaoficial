@@ -53,7 +53,13 @@ ${mode === "entrega" ? `*Taxa de entrega:* ${brl(fee)}\n` : ""}*Total:* ${brl(gr
     if (Object.keys(errors).length > 0) {
       e.preventDefault();
       setShowErrors(true);
+      return;
     }
+    // Limpa o carrinho e fecha o drawer após enviar para o WhatsApp
+    setTimeout(() => {
+      clear();
+      setOpen(false);
+    }, 300);
   }
 
   return (
