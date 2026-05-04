@@ -34,25 +34,25 @@ export function Menu() {
   }, [group]);
 
   return (
-    <section id="cardapio" className="relative py-14 sm:py-24 scroll-mt-20">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="text-center mb-8 sm:mb-14">
-          <p className="text-gold text-[11px] sm:text-sm uppercase tracking-[0.4em] mb-3">Nosso cardápio</p>
-          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-cream">
+    <section id="cardapio" className="relative py-10 sm:py-24 scroll-mt-20">
+      <div className="mx-auto max-w-7xl px-3 sm:px-6">
+        <div className="text-center mb-6 sm:mb-14">
+          <p className="text-gold text-[10px] sm:text-sm uppercase tracking-[0.4em] mb-2 sm:mb-3">Nosso cardápio</p>
+          <h2 className="font-display text-3xl sm:text-5xl md:text-6xl text-cream">
             Sabores <span className="font-script text-gold italic">da casa</span>
           </h2>
-          <p className="ornament inline-block mt-5 text-cream/70 text-sm">cada fatia, uma experiência</p>
+          <p className="ornament inline-block mt-4 sm:mt-5 text-cream/70 text-xs sm:text-sm">cada fatia, uma experiência</p>
         </div>
 
         {/* Group tabs */}
-        <div className="sticky top-16 sm:top-20 z-20 -mx-4 sm:mx-0 mb-2 bg-deep/95 backdrop-blur-md border-b border-gold/15">
-          <div className="mx-auto max-w-3xl px-4 py-3">
+        <div className="sticky top-16 sm:top-20 z-20 -mx-3 sm:mx-0 mb-1 bg-deep/95 backdrop-blur-md border-b border-gold/15">
+          <div className="mx-auto max-w-3xl px-3 sm:px-4 py-2 sm:py-3">
             <div className="grid grid-cols-3 gap-1 rounded-full border border-gold/25 bg-cream/[0.03] p-1">
               {groups.map(g => (
                 <button
                   key={g.id}
                   onClick={() => setGroup(g.id)}
-                  className={`rounded-full py-2 text-[11px] sm:text-xs font-medium uppercase tracking-wider transition ${
+                  className={`rounded-full py-1.5 sm:py-2 text-[10px] sm:text-xs font-medium uppercase tracking-wider transition leading-tight ${
                     group === g.id
                       ? "bg-gold text-[var(--primary-foreground)] shadow-gold"
                       : "text-cream/75 hover:text-gold"
@@ -66,13 +66,13 @@ export function Menu() {
         </div>
 
         {/* Sub-category chips */}
-        <div className="-mx-4 sm:mx-0 sticky top-[120px] sm:top-[136px] z-10 bg-deep/85 backdrop-blur-md mb-10">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide px-4 sm:px-2 py-3">
+        <div className="-mx-3 sm:mx-0 sticky top-[108px] sm:top-[136px] z-10 bg-deep/90 backdrop-blur-md mb-8 sm:mb-10">
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide px-3 sm:px-2 py-2 sm:py-3">
             {subCats.map(c => (
               <a
                 key={c.id}
                 href={`#${c.id}`}
-                className="shrink-0 rounded-full border border-cream/15 bg-cream/[0.03] px-4 py-1.5 text-xs whitespace-nowrap text-cream/80 hover:border-gold/50 hover:text-gold transition"
+                className="shrink-0 rounded-full border border-cream/15 bg-cream/[0.03] px-3.5 py-1.5 text-[11px] sm:text-xs whitespace-nowrap text-cream/85 hover:border-gold/50 hover:text-gold transition"
               >
                 {c.label}
               </a>
@@ -100,24 +100,24 @@ function PizzaCategoryBlock({ cat, onAdd }: { cat: typeof pizzaCategories[number
   return (
     <div id={cat.id} className="scroll-mt-44">
       {/* Vintage-style menu card */}
-      <div className="relative rounded-[28px] border border-gold/30 bg-gradient-to-b from-cream/[0.06] via-cream/[0.03] to-transparent px-4 sm:px-10 py-8 sm:py-12 shadow-elegant">
+      <div className="relative rounded-2xl sm:rounded-[28px] border border-gold/30 bg-gradient-to-b from-cream/[0.06] via-cream/[0.03] to-transparent px-3 sm:px-10 py-6 sm:py-12 shadow-elegant">
         {/* Ornamental header */}
-        <header className="text-center mb-6">
-          <div className="flex items-center justify-center gap-3 sm:gap-5">
-            <span className="h-px w-10 sm:w-20 bg-gold/60" />
-            <h3 className="font-script text-gold italic text-3xl sm:text-5xl leading-none">{cat.title.replace("Pizzas ", "Pizzas ")}</h3>
-            <span className="h-px w-10 sm:w-20 bg-gold/60" />
+        <header className="text-center mb-5 sm:mb-6">
+          <div className="flex items-center justify-center gap-2 sm:gap-5">
+            <span className="h-px w-6 sm:w-20 bg-gold/60" />
+            <h3 className="font-script text-gold italic text-2xl sm:text-5xl leading-none">{cat.title.replace("Pizzas ", "Pizzas ")}</h3>
+            <span className="h-px w-6 sm:w-20 bg-gold/60" />
           </div>
-          <p className="mt-2 text-gold/90 uppercase tracking-[0.45em] text-[11px] sm:text-xs">{cat.subtitle}</p>
+          <p className="mt-2 text-gold/90 uppercase tracking-[0.35em] sm:tracking-[0.45em] text-[10px] sm:text-xs">{cat.subtitle}</p>
         </header>
 
         {/* Prices grid (4 columns like the print) */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8 pb-6 border-b border-gold/20">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 mb-6 sm:mb-8 pb-5 sm:pb-6 border-b border-gold/20">
           {cat.prices.map((p) => (
-            <div key={p.slices} className="text-center">
-              <p className="font-display text-cream text-sm sm:text-base">{p.slices}</p>
+            <div key={p.slices} className="text-center rounded-lg bg-cream/[0.03] sm:bg-transparent py-2 sm:py-0">
+              <p className="font-display text-cream text-[13px] sm:text-base">{p.slices}</p>
               <p className="text-cream/60 text-[10px] sm:text-xs italic">({p.flavors})</p>
-              <p className="text-gold font-semibold text-base sm:text-lg mt-1 tabular-nums">{brl(p.price)}</p>
+              <p className="text-gold font-semibold text-sm sm:text-lg mt-1 tabular-nums">{brl(p.price)}</p>
             </div>
           ))}
         </div>
@@ -130,11 +130,11 @@ function PizzaCategoryBlock({ cat, onAdd }: { cat: typeof pizzaCategories[number
         </ul>
 
         {/* Footer note */}
-        <p className="text-center text-[10px] sm:text-xs text-cream/55 mt-6 italic uppercase tracking-wider">
+        <p className="text-center text-[10px] sm:text-xs text-cream/55 mt-5 sm:mt-6 italic uppercase tracking-wider px-2">
           ✶ Todas as pizzas {cat.subtitle.toLowerCase()} contêm molho de tomate e orégano
         </p>
         {cat.borderNote && (
-          <p className="text-center text-xs sm:text-sm text-gold mt-3 font-medium">
+          <p className="text-center text-[11px] sm:text-sm text-gold mt-3 font-medium px-2">
             <span className="uppercase tracking-wider">Bordas:</span> {cat.borderNote.replace(/^Bordas:\s*/i, "")}
           </p>
         )}
@@ -320,13 +320,17 @@ function SimpleItem({ name, description, price, onAdd }: { name: string; descrip
 
 // Floating WhatsApp
 export function WhatsAppFAB() {
+  const { count, open } = useCart();
+  const lifted = count > 0 && !open;
   return (
     <a
       href={`https://wa.me/${WHATSAPP_NUMBER}`}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Falar no WhatsApp"
-      className="fixed bottom-24 sm:bottom-5 left-4 z-30 grid place-items-center h-12 w-12 rounded-full bg-[#25D366] text-white shadow-lg hover:scale-110 transition"
+      className={`fixed left-4 z-30 grid place-items-center h-12 w-12 rounded-full bg-[#25D366] text-white shadow-lg hover:scale-110 transition-all duration-300 ${
+        lifted ? "bottom-24" : "bottom-5"
+      } sm:bottom-5`}
     >
       <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor"><path d="M20.52 3.48A11.86 11.86 0 0012.06 0C5.5 0 .14 5.34.14 11.9c0 2.1.55 4.15 1.6 5.96L0 24l6.32-1.66a11.9 11.9 0 005.74 1.46h.01c6.55 0 11.9-5.34 11.91-11.9a11.84 11.84 0 00-3.46-8.42zM12.07 21.8h-.01a9.9 9.9 0 01-5.04-1.38l-.36-.21-3.75.98 1-3.65-.23-.37a9.86 9.86 0 01-1.51-5.27c0-5.46 4.45-9.9 9.91-9.9 2.65 0 5.13 1.03 7 2.9a9.84 9.84 0 012.9 7c0 5.47-4.45 9.9-9.91 9.9zm5.43-7.42c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15s-.77.97-.94 1.17c-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.5l-.57-.01a1.1 1.1 0 00-.8.37c-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.2 5.07 4.49.71.3 1.27.49 1.7.62.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35z"/></svg>
     </a>
