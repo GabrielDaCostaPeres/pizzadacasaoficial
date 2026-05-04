@@ -39,7 +39,7 @@ export function Menu() {
         <div className="text-center mb-8 sm:mb-14">
           <p className="text-gold text-[11px] sm:text-sm uppercase tracking-[0.4em] mb-3">Nosso cardápio</p>
           <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-cream">
-            Sabores <span className="font-script text-gold italic">artesanais</span>
+            Sabores <span className="font-script text-gold italic">da casa</span>
           </h2>
           <p className="ornament inline-block mt-5 text-cream/70 text-sm">cada fatia, uma experiência</p>
         </div>

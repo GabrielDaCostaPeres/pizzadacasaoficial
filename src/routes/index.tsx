@@ -12,10 +12,10 @@ import { Clock, MapPin, Phone, Flame, Leaf, Star } from "lucide-react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Pizza d'Casa — Pizzaria artesanal | Peça pelo WhatsApp" },
-      { name: "description", content: "Pizzas artesanais, hambúrgueres, dogs prensados e porções. Tradicionais, especiais, premium e doces. Peça já pelo WhatsApp." },
-      { property: "og:title", content: "Pizza d'Casa — Pizzaria Artesanal" },
-      { property: "og:description", content: "Sabores artesanais com a tradição da casa. Cardápio completo e pedido direto pelo WhatsApp." },
+      { title: "Pizza d'Casa — Pizzaria | Peça pelo WhatsApp" },
+      { name: "description", content: "Pizzas, hambúrgueres, dogs prensados e porções. Tradicionais, especiais, premium e doces. Peça já pelo WhatsApp." },
+      { property: "og:title", content: "Pizza d'Casa — Pizzaria" },
+      { property: "og:description", content: "Sabores com a tradição da casa. Cardápio completo e pedido direto pelo WhatsApp." },
       { property: "og:type", content: "website" },
     ],
   }),
@@ -54,7 +54,7 @@ function Hero() {
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 py-14 sm:py-32 md:py-40 text-center">
         <p className="text-gold text-xs sm:text-sm uppercase tracking-[0.4em] mb-6 animate-in fade-in duration-700">
-          Pizzaria artesanal
+          Tradição da casa
         </p>
         <Logo priority className="mx-auto h-28 sm:h-40 md:h-48 w-auto animate-in fade-in zoom-in-95 duration-1000" />
 
@@ -163,7 +163,7 @@ function Footer() {
         <div className="text-center sm:text-left">
           <Logo className="mx-auto sm:mx-0 h-14 w-auto opacity-90" />
           <p className="mt-4 text-cream/70 text-sm font-serif italic max-w-xs mx-auto sm:mx-0">
-            Pizzas artesanais, feitas com tempo e tradição da casa.
+            Pizzas feitas com tempo e tradição da casa.
           </p>
         </div>
         <div>

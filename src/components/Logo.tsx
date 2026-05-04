@@ -4,7 +4,7 @@ export function Logo({ className = "h-12", priority = false }: { className?: str
   return (
     <img
       src={logo}
-      alt="Pizza d'Casa — Pizzaria artesanal"
+      alt="Pizza d'Casa — Pizzaria"
       className={className}
       loading={priority ? "eager" : "lazy"}
       decoding="async"
