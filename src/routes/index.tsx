@@ -140,7 +140,7 @@ function Contact() {
         <div>
           <MapPin className="mx-auto h-6 w-6 text-gold mb-3" />
           <h3 className="font-display text-xl text-cream mb-1">Entrega</h3>
-          <p className="text-cream/75 text-sm">Grátis em<br/>São Lourenço do Oeste — PR</p>
+          <p className="text-cream/75 text-sm">Grátis em<br/>São Lourenço — PR</p>
         </div>
       </div>
     </section>
