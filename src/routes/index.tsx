@@ -5,7 +5,7 @@ import { CartDrawer } from "@/components/CartDrawer";
 import { CartBottomBar } from "@/components/CartBottomBar";
 import { Menu, WhatsAppFAB } from "@/components/Menu";
 import { Logo } from "@/components/Logo";
-import { WHATSAPP_DISPLAY, WHATSAPP_NUMBER, DELIVERY_FEE } from "@/data/menu";
+import { WHATSAPP_DISPLAY, WHATSAPP_NUMBER } from "@/data/menu";
 import { brl } from "@/lib/format";
 import { Clock, MapPin, Phone, Flame, Leaf, Star } from "lucide-react";
 
@@ -86,7 +86,7 @@ function Highlights() {
   const items = [
     { icon: Flame, title: "Sabor da casa" },
     { icon: Clock, title: "Pedido rápido" },
-    { icon: MapPin, title: `Entrega ${brl(DELIVERY_FEE)}` },
+    { icon: MapPin, title: "Entrega grátis na cidade" },
   ];
   return (
     <section className="py-4 sm:py-6 border-y border-gold/10">
@@ -140,7 +140,7 @@ function Contact() {
         <div>
           <MapPin className="mx-auto h-6 w-6 text-gold mb-3" />
           <h3 className="font-display text-xl text-cream mb-1">Entrega</h3>
-          <p className="text-cream/75 text-sm">Taxa única<br/>{brl(DELIVERY_FEE)}</p>
+          <p className="text-cream/75 text-sm">Grátis em<br/>São Lourenço do Oeste — PR</p>
         </div>
       </div>
     </section>

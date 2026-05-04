@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useCart } from "@/cart/CartContext";
 import { brl, buildWhatsAppUrl } from "@/lib/format";
-import { WHATSAPP_NUMBER, DELIVERY_FEE } from "@/data/menu";
+import { WHATSAPP_NUMBER } from "@/data/menu";
 import { X, Plus, Minus, ShoppingBag, Trash2, MapPin, Wallet, MessageCircle, Check } from "lucide-react";
 
 type Mode = "entrega" | "retirada";
@@ -18,8 +18,8 @@ export function CartDrawer() {
   const [showErrors, setShowErrors] = useState(false);
   const linkRef = useRef<HTMLAnchorElement>(null);
 
-  const fee = mode === "entrega" ? DELIVERY_FEE : 0;
-  const grandTotal = total + fee;
+  const fee = 0;
+  const grandTotal = total;
 
   const errors = useMemo(() => {
     const e: Record<string, string> = {};
@@ -43,7 +43,7 @@ ${obs ? `*Observações:* ${obs}\n` : ""}
 ${itensTxt}
 
 *Subtotal:* ${brl(total)}
-${mode === "entrega" ? `*Taxa de entrega:* ${brl(fee)}\n` : ""}*Total:* ${brl(grandTotal)}`;
+*Total:* ${brl(grandTotal)}`;
   }, [lines, name, phone, mode, address, payment, troco, obs, total, fee, grandTotal]);
 
   const waUrl = useMemo(() => buildWhatsAppUrl(WHATSAPP_NUMBER, message), [message]);
@@ -187,7 +187,7 @@ ${mode === "entrega" ? `*Taxa de entrega:* ${brl(fee)}\n` : ""}*Total:* ${brl(gr
           <div className="border-t border-gold/20 p-4 sm:p-5 bg-deep/95 backdrop-blur-sm">
             <div className="space-y-1 text-sm mb-3">
               <div className="flex justify-between text-cream/70"><span>Subtotal</span><span>{brl(total)}</span></div>
-              {mode === "entrega" && <div className="flex justify-between text-cream/70"><span>Taxa de entrega</span><span>{brl(fee)}</span></div>}
+              {mode === "entrega" && <div className="flex justify-between text-cream/70"><span>Taxa de entrega</span><span className="text-gold">Grátis</span></div>}
               <div className="flex justify-between text-base font-semibold text-cream pt-2 border-t border-cream/10 mt-1">
                 <span>Total</span><span className="text-gold text-lg">{brl(grandTotal)}</span>
               </div>
