@@ -314,4 +314,5 @@ export const adicionais = [
 
 export const WHATSAPP_NUMBER = "5544997002675"; // formato internacional
 export const WHATSAPP_DISPLAY = "(44) 99700-2675";
-export const DELIVERY_FEE = 5.0;
+export const DELIVERY_FEE = 0;
+export const DELIVERY_CITY = "São Lourenço do Oeste — PR";
