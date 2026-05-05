@@ -67,7 +67,7 @@ function Hero() {
             href="#cardapio"
             className="inline-flex items-center justify-center rounded-full gradient-gold text-[var(--primary-foreground)] font-semibold px-7 py-3.5 text-sm shadow-gold active:scale-[0.98] sm:hover:scale-[1.02] transition"
           >
-            Peça agora · entrega rápida 🍕
+            Peça agora · entrega rápida
           </a>
           <a
             href={`https://wa.me/${WHATSAPP_NUMBER}`}
