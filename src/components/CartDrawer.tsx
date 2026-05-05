@@ -42,21 +42,50 @@ export function CartDrawer() {
 
   const message = useMemo(() => {
     if (lines.length === 0) return "";
+
     const itensTxt = lines
-      .map(l => `• ${l.qty}x ${l.name}${l.note ? ` _(${l.note})_` : ""} — ${brl(l.unitPrice * l.qty)}`)
+      .map(l => {
+        const sub = brl(l.unitPrice * l.qty);
+        const noteLine = l.note ? `\n   _${l.note}_` : "";
+        return `• ${l.qty}x  ${l.name}  —  ${sub}${noteLine}`;
+      })
       .join("\n");
-    return `*🍕 Novo Pedido — Pizza d'Casa*
 
-*Cliente:* ${name || "—"}${phone ? `\n*Telefone:* ${phone}` : ""}
-*Modalidade:* ${mode === "entrega" ? "Entrega" : "Retirada no local"}
-${mode === "entrega" ? `*Endereço:* ${address || "—"}\n` : ""}*Pagamento:* ${payment}${payment === "Dinheiro" && troco ? ` (troco para ${troco})` : ""}
-${obs ? `*Observações:* ${obs}\n` : ""}
-*Itens:*
-${itensTxt}
+    const linhas: string[] = [];
+    linhas.push("*PIZZA D'CASA — NOVO PEDIDO*");
+    linhas.push("─────────────────────");
+    linhas.push("");
+    linhas.push("*DADOS DO CLIENTE*");
+    linhas.push(`Nome: ${name || "—"}`);
+    if (phone) linhas.push(`Telefone: ${phone}`);
+    linhas.push("");
+    linhas.push("*ENTREGA*");
+    linhas.push(`Modalidade: ${mode === "entrega" ? "Entrega" : "Retirada no local"}`);
+    if (mode === "entrega") linhas.push(`Endereço: ${address || "—"}`);
+    linhas.push("");
+    linhas.push("*PAGAMENTO*");
+    linhas.push(
+      `Forma: ${payment}${payment === "Dinheiro" && troco ? ` — troco para ${troco}` : ""}`
+    );
+    linhas.push("");
+    linhas.push("*ITENS DO PEDIDO*");
+    linhas.push(itensTxt);
+    if (obs.trim()) {
+      linhas.push("");
+      linhas.push("*OBSERVAÇÕES*");
+      linhas.push(obs.trim());
+    }
+    linhas.push("");
+    linhas.push("─────────────────────");
+    linhas.push(`Subtotal: ${brl(total)}`);
+    if (mode === "entrega") linhas.push(`Taxa de entrega: Grátis`);
+    linhas.push(`*TOTAL: ${brl(grandTotal)}*`);
+    linhas.push("");
+    linhas.push("_Pedido enviado pelo site._");
 
-*Subtotal:* ${brl(total)}
-*Total:* ${brl(grandTotal)}`;
+    return linhas.join("\n");
   }, [lines, name, phone, mode, address, payment, troco, obs, total, fee, grandTotal]);
+
 
   const waUrl = useMemo(() => buildWhatsAppUrl(WHATSAPP_NUMBER, message), [message]);
 
