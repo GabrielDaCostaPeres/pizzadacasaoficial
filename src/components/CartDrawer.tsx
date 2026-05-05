@@ -1,13 +1,15 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useCart } from "@/cart/CartContext";
 import { brl, buildWhatsAppUrl } from "@/lib/format";
 import { WHATSAPP_NUMBER } from "@/data/menu";
-import { X, Plus, Minus, ShoppingBag, Trash2, MapPin, Wallet, MessageCircle, Check } from "lucide-react";
+import { X, Plus, Minus, ShoppingBag, Trash2, MapPin, Wallet, MessageCircle, Check, ArrowLeft, ArrowRight } from "lucide-react";
 
 type Mode = "entrega" | "retirada";
+type Step = "cart" | "checkout";
 
 export function CartDrawer() {
   const { lines, open, setOpen, inc, dec, remove, total, clear } = useCart();
+  const [step, setStep] = useState<Step>("cart");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -20,6 +22,16 @@ export function CartDrawer() {
 
   const fee = 0;
   const grandTotal = total;
+
+  // Sempre que o drawer abre, começa na etapa do carrinho
+  useEffect(() => {
+    if (open) setStep("cart");
+  }, [open]);
+
+  // Se o carrinho ficar vazio enquanto está no checkout, volta para a tela do carrinho
+  useEffect(() => {
+    if (lines.length === 0 && step === "checkout") setStep("cart");
+  }, [lines.length, step]);
 
   const errors = useMemo(() => {
     const e: Record<string, string> = {};
@@ -62,6 +74,11 @@ ${itensTxt}
     }, 300);
   }
 
+  function goToCheckout() {
+    if (lines.length === 0) return;
+    setStep("checkout");
+  }
+
   return (
     <>
       <div
@@ -83,9 +100,20 @@ ${itensTxt}
         </div>
 
         <header className="flex items-center justify-between px-5 pt-3 sm:pt-5 pb-4 border-b border-gold/15">
-          <div className="flex items-center gap-2">
-            <ShoppingBag className="h-5 w-5 text-gold" />
-            <h2 className="font-display text-2xl text-cream">Seu pedido</h2>
+          <div className="flex items-center gap-2 min-w-0">
+            {step === "checkout" && (
+              <button
+                onClick={() => setStep("cart")}
+                className="rounded-full p-1.5 hover:bg-cream/10 text-cream/80 -ml-1"
+                aria-label="Voltar ao carrinho"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+            )}
+            <ShoppingBag className="h-5 w-5 text-gold shrink-0" />
+            <h2 className="font-display text-2xl text-cream truncate">
+              {step === "cart" ? "Seu pedido" : "Finalizar pedido"}
+            </h2>
           </div>
           <button onClick={() => setOpen(false)} className="rounded-full p-2 hover:bg-cream/10 text-cream/80" aria-label="Fechar">
             <X className="h-5 w-5" />
@@ -105,7 +133,7 @@ ${itensTxt}
                 Ver cardápio
               </button>
             </div>
-          ) : (
+          ) : step === "cart" ? (
             <>
               {lines.map(l => (
                 <div key={l.id} className="rounded-xl border border-cream/10 bg-cream/[0.03] p-3.5">
@@ -129,57 +157,78 @@ ${itensTxt}
                   </div>
                 </div>
               ))}
-
-              {/* Checkout */}
-              <div className="pt-2 space-y-4">
-                <SectionTitle icon={<MapPin className="h-4 w-4" />}>Como deseja receber?</SectionTitle>
-                <div className="grid grid-cols-2 gap-2">
-                  <ToggleBtn active={mode==="entrega"} onClick={() => setMode("entrega")}>Entrega</ToggleBtn>
-                  <ToggleBtn active={mode==="retirada"} onClick={() => setMode("retirada")}>Retirar no local</ToggleBtn>
+            </>
+          ) : (
+            // Etapa: checkout (somente formulário)
+            <div className="space-y-4">
+              {/* Resumo compacto dos itens */}
+              <div className="rounded-xl border border-cream/10 bg-cream/[0.03] p-3 text-sm text-cream/80">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[11px] uppercase tracking-[0.2em] text-gold/80">Resumo</span>
+                  <button
+                    onClick={() => setStep("cart")}
+                    className="text-[11px] uppercase tracking-wider text-cream/60 hover:text-gold"
+                  >
+                    editar
+                  </button>
                 </div>
-
-                <div className="space-y-2.5">
-                  <Field
-                    label="Seu nome"
-                    value={name} onChange={setName}
-                    error={showErrors ? errors.name : undefined}
-                    autoComplete="name"
-                  />
-                  <Field
-                    label="Telefone (opcional)"
-                    value={phone} onChange={setPhone}
-                    inputMode="tel" autoComplete="tel"
-                  />
-                  {mode === "entrega" && (
-                    <Field
-                      label="Endereço completo (rua, nº, bairro)"
-                      value={address} onChange={setAddress}
-                      error={showErrors ? errors.address : undefined}
-                      autoComplete="street-address"
-                    />
-                  )}
-                </div>
-
-                <SectionTitle icon={<Wallet className="h-4 w-4" />}>Forma de pagamento</SectionTitle>
-                <div className="grid grid-cols-2 gap-2">
-                  {["Pix", "Dinheiro", "Cartão de débito", "Cartão de crédito"].map(p => (
-                    <ToggleBtn key={p} active={payment===p} onClick={() => setPayment(p)}>{p}</ToggleBtn>
+                <ul className="space-y-0.5">
+                  {lines.map(l => (
+                    <li key={l.id} className="flex justify-between gap-3">
+                      <span className="truncate">{l.qty}× {l.name}</span>
+                      <span className="text-cream/70 tabular-nums shrink-0">{brl(l.unitPrice * l.qty)}</span>
+                    </li>
                   ))}
-                </div>
-                {payment === "Dinheiro" && (
+                </ul>
+              </div>
+
+              <SectionTitle icon={<MapPin className="h-4 w-4" />}>Como deseja receber?</SectionTitle>
+              <div className="grid grid-cols-2 gap-2">
+                <ToggleBtn active={mode==="entrega"} onClick={() => setMode("entrega")}>Entrega</ToggleBtn>
+                <ToggleBtn active={mode==="retirada"} onClick={() => setMode("retirada")}>Retirar no local</ToggleBtn>
+              </div>
+
+              <div className="space-y-2.5">
+                <Field
+                  label="Seu nome"
+                  value={name} onChange={setName}
+                  error={showErrors ? errors.name : undefined}
+                  autoComplete="name"
+                />
+                <Field
+                  label="Telefone (opcional)"
+                  value={phone} onChange={setPhone}
+                  inputMode="tel" autoComplete="tel"
+                />
+                {mode === "entrega" && (
                   <Field
-                    label="Troco para quanto? (opcional)"
-                    value={troco} onChange={setTroco}
-                    inputMode="decimal"
+                    label="Endereço completo (rua, nº, bairro)"
+                    value={address} onChange={setAddress}
+                    error={showErrors ? errors.address : undefined}
+                    autoComplete="street-address"
                   />
                 )}
-
-                <textarea
-                  value={obs} onChange={e => setObs(e.target.value)} placeholder="Observações (opcional)" rows={2}
-                  className="w-full rounded-lg bg-cream/5 border border-cream/15 px-3 py-2 text-sm text-cream placeholder:text-cream/40 focus:border-gold outline-none resize-none"
-                />
               </div>
-            </>
+
+              <SectionTitle icon={<Wallet className="h-4 w-4" />}>Forma de pagamento</SectionTitle>
+              <div className="grid grid-cols-2 gap-2">
+                {["Pix", "Dinheiro", "Cartão de débito", "Cartão de crédito"].map(p => (
+                  <ToggleBtn key={p} active={payment===p} onClick={() => setPayment(p)}>{p}</ToggleBtn>
+                ))}
+              </div>
+              {payment === "Dinheiro" && (
+                <Field
+                  label="Troco para quanto? (opcional)"
+                  value={troco} onChange={setTroco}
+                  inputMode="decimal"
+                />
+              )}
+
+              <textarea
+                value={obs} onChange={e => setObs(e.target.value)} placeholder="Observações (opcional)" rows={2}
+                className="w-full rounded-lg bg-cream/5 border border-cream/15 px-3 py-2 text-sm text-cream placeholder:text-cream/40 focus:border-gold outline-none resize-none"
+              />
+            </div>
           )}
         </div>
 
@@ -187,29 +236,51 @@ ${itensTxt}
           <div className="border-t border-gold/20 p-4 sm:p-5 bg-deep/95 backdrop-blur-sm">
             <div className="space-y-1 text-sm mb-3">
               <div className="flex justify-between text-cream/70"><span>Subtotal</span><span>{brl(total)}</span></div>
-              {mode === "entrega" && <div className="flex justify-between text-cream/70"><span>Taxa de entrega</span><span className="text-gold">Grátis</span></div>}
+              {step === "checkout" && mode === "entrega" && (
+                <div className="flex justify-between text-cream/70"><span>Taxa de entrega</span><span className="text-gold">Grátis</span></div>
+              )}
               <div className="flex justify-between text-base font-semibold text-cream pt-2 border-t border-cream/10 mt-1">
                 <span>Total</span><span className="text-gold text-lg">{brl(grandTotal)}</span>
               </div>
             </div>
 
-            <a
-              ref={linkRef}
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={handleSendClick}
-              className="flex items-center justify-center gap-2 w-full rounded-xl gradient-gold text-[var(--primary-foreground)] font-semibold py-3.5 shadow-gold active:scale-[0.99] transition select-none"
-            >
-              <MessageCircle className="h-5 w-5" />
-              Enviar pedido pelo WhatsApp
-            </a>
-            <p className="text-[11px] text-cream/45 text-center mt-2">
-              Você será redirecionado ao WhatsApp para confirmar o pedido.
-            </p>
-            <button onClick={clear} className="w-full text-xs text-cream/40 hover:text-cream/70 py-2 mt-1">
-              Limpar carrinho
-            </button>
+            {step === "cart" ? (
+              <>
+                <button
+                  onClick={goToCheckout}
+                  className="flex items-center justify-center gap-2 w-full rounded-xl gradient-gold text-[var(--primary-foreground)] font-semibold py-3.5 shadow-gold active:scale-[0.99] transition select-none"
+                >
+                  Finalizar pedido
+                  <ArrowRight className="h-5 w-5" />
+                </button>
+                <button onClick={clear} className="w-full text-xs text-cream/40 hover:text-cream/70 py-2 mt-1">
+                  Limpar carrinho
+                </button>
+              </>
+            ) : (
+              <>
+                <a
+                  ref={linkRef}
+                  href={waUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={handleSendClick}
+                  className="flex items-center justify-center gap-2 w-full rounded-xl gradient-gold text-[var(--primary-foreground)] font-semibold py-3.5 shadow-gold active:scale-[0.99] transition select-none"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  Enviar pedido pelo WhatsApp
+                </a>
+                <p className="text-[11px] text-cream/45 text-center mt-2">
+                  Você será redirecionado ao WhatsApp para confirmar o pedido.
+                </p>
+                <button
+                  onClick={() => setStep("cart")}
+                  className="w-full text-xs text-cream/50 hover:text-cream/80 py-2 mt-1"
+                >
+                  ← Voltar ao carrinho
+                </button>
+              </>
+            )}
           </div>
         )}
       </aside>
