@@ -274,7 +274,7 @@ export function CartDrawer() {
               <>
                 <button
                   onClick={goToCheckout}
-                  className="flex items-center justify-center gap-2 w-full rounded-xl gradient-gold text-[var(--primary-foreground)] font-semibold py-3.5 shadow-gold active:scale-[0.99] transition select-none"
+                  className="flex items-center justify-center gap-2 w-full rounded-2xl gradient-gold text-[var(--primary-foreground)] font-semibold text-base py-4 sm:py-3.5 shadow-gold active:scale-[0.99] transition select-none"
                 >
                   Finalizar pedido
                   <ArrowRight className="h-5 w-5" />
