@@ -313,17 +313,24 @@ export function CartDrawer() {
               <>
                 <a
                   ref={linkRef}
-                  href={waUrl}
+                  href={status.open ? waUrl : "#"}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleSendClick}
-                  className="flex items-center justify-center gap-2 w-full rounded-2xl gradient-gold text-[var(--primary-foreground)] font-semibold text-base py-4 sm:py-3.5 shadow-gold active:scale-[0.99] transition select-none"
+                  aria-disabled={!status.open}
+                  className={`flex items-center justify-center gap-2 w-full rounded-2xl font-semibold text-base py-4 sm:py-3.5 transition select-none ${
+                    status.open
+                      ? "gradient-gold text-[var(--primary-foreground)] shadow-gold active:scale-[0.99]"
+                      : "bg-cream/10 text-cream/40 cursor-not-allowed"
+                  }`}
                 >
                   <MessageCircle className="h-5 w-5" />
-                  Enviar pedido pelo WhatsApp
+                  {status.open ? "Enviar pedido pelo WhatsApp" : "Fora do horário de atendimento"}
                 </a>
                 <p className="text-[11px] text-cream/45 text-center mt-2">
-                  Você será redirecionado ao WhatsApp para confirmar o pedido.
+                  {status.open
+                    ? "Você será redirecionado ao WhatsApp para confirmar o pedido."
+                    : "Atendimento de terça a domingo, das 19h às 23h."}
                 </p>
                 <button
                   onClick={() => setStep("cart")}
