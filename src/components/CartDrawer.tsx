@@ -99,6 +99,11 @@ export function CartDrawer() {
 
   function handleSendClick(e: React.MouseEvent<HTMLAnchorElement>) {
     if (lines.length === 0) { e.preventDefault(); return; }
+    if (!status.open) {
+      e.preventDefault();
+      window.alert(status.message);
+      return;
+    }
     if (Object.keys(errors).length > 0) {
       e.preventDefault();
       setShowErrors(true);
