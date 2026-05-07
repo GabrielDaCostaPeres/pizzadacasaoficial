@@ -115,17 +115,15 @@ export function CartDrawer() {
         aria-hidden
       />
       <aside
-        className={`fixed inset-x-0 bottom-0 sm:inset-y-0 sm:right-0 sm:left-auto z-50 flex flex-col bg-deep border-gold/20 shadow-elegant transition-transform duration-300
-          h-[92vh] sm:h-full w-full sm:max-w-md
-          rounded-t-2xl sm:rounded-none border-t sm:border-t-0 sm:border-l
+        className={`fixed inset-0 sm:inset-y-0 sm:right-0 sm:left-auto z-50 flex flex-col bg-deep border-gold/20 shadow-elegant transition-transform duration-300
+          h-[100dvh] sm:h-full w-full sm:max-w-md
+          sm:rounded-none sm:border-l
           ${open ? "translate-y-0 sm:translate-x-0" : "translate-y-full sm:translate-y-0 sm:translate-x-full"}`}
         aria-hidden={!open}
         aria-label="Carrinho de pedidos"
       >
-        {/* mobile grabber */}
-        <div className="sm:hidden flex justify-center pt-2 pb-1">
-          <span className="h-1 w-10 rounded-full bg-cream/20" />
-        </div>
+        {/* spacer for safe area on mobile */}
+        <div className="sm:hidden h-[env(safe-area-inset-top)]" />
 
         <header className="flex items-center justify-between px-5 pt-3 sm:pt-5 pb-4 border-b border-gold/15">
           <div className="flex items-center gap-2 min-w-0">
@@ -261,7 +259,7 @@ export function CartDrawer() {
         </div>
 
         {lines.length > 0 && (
-          <div className="border-t border-gold/20 p-4 sm:p-5 bg-deep/95 backdrop-blur-sm">
+          <div className="border-t border-gold/20 px-4 sm:px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:pb-5 bg-deep/95 backdrop-blur-sm">
             <div className="space-y-1 text-sm mb-3">
               <div className="flex justify-between text-cream/70"><span>Subtotal</span><span>{brl(total)}</span></div>
               {step === "checkout" && mode === "entrega" && (
@@ -276,7 +274,7 @@ export function CartDrawer() {
               <>
                 <button
                   onClick={goToCheckout}
-                  className="flex items-center justify-center gap-2 w-full rounded-xl gradient-gold text-[var(--primary-foreground)] font-semibold py-3.5 shadow-gold active:scale-[0.99] transition select-none"
+                  className="flex items-center justify-center gap-2 w-full rounded-2xl gradient-gold text-[var(--primary-foreground)] font-semibold text-base py-4 sm:py-3.5 shadow-gold active:scale-[0.99] transition select-none"
                 >
                   Finalizar pedido
                   <ArrowRight className="h-5 w-5" />
@@ -298,7 +296,7 @@ export function CartDrawer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleSendClick}
-                  className="flex items-center justify-center gap-2 w-full rounded-xl gradient-gold text-[var(--primary-foreground)] font-semibold py-3.5 shadow-gold active:scale-[0.99] transition select-none"
+                  className="flex items-center justify-center gap-2 w-full rounded-2xl gradient-gold text-[var(--primary-foreground)] font-semibold text-base py-4 sm:py-3.5 shadow-gold active:scale-[0.99] transition select-none"
                 >
                   <MessageCircle className="h-5 w-5" />
                   Enviar pedido pelo WhatsApp
