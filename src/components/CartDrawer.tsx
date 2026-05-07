@@ -259,7 +259,7 @@ export function CartDrawer() {
         </div>
 
         {lines.length > 0 && (
-          <div className="border-t border-gold/20 p-4 sm:p-5 bg-deep/95 backdrop-blur-sm">
+          <div className="border-t border-gold/20 px-4 sm:px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:pb-5 bg-deep/95 backdrop-blur-sm">
             <div className="space-y-1 text-sm mb-3">
               <div className="flex justify-between text-cream/70"><span>Subtotal</span><span>{brl(total)}</span></div>
               {step === "checkout" && mode === "entrega" && (
