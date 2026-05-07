@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useCart } from "@/cart/CartContext";
 import { brl, buildWhatsAppUrl } from "@/lib/format";
 import { WHATSAPP_NUMBER } from "@/data/menu";
-import { X, Plus, Minus, ShoppingBag, Trash2, MapPin, Wallet, MessageCircle, Check, ArrowLeft, ArrowRight } from "lucide-react";
+import { getOpenStatus } from "@/lib/schedule";
+import { X, Plus, Minus, ShoppingBag, Trash2, MapPin, Wallet, MessageCircle, Check, ArrowLeft, ArrowRight, Clock } from "lucide-react";
 
 type Mode = "entrega" | "retirada";
 type Step = "cart" | "checkout";
