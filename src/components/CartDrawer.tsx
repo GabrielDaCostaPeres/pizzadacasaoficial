@@ -115,9 +115,9 @@ export function CartDrawer() {
         aria-hidden
       />
       <aside
-        className={`fixed inset-x-0 bottom-0 sm:inset-y-0 sm:right-0 sm:left-auto z-50 flex flex-col bg-deep border-gold/20 shadow-elegant transition-transform duration-300
-          h-[92vh] sm:h-full w-full sm:max-w-md
-          rounded-t-2xl sm:rounded-none border-t sm:border-t-0 sm:border-l
+        className={`fixed inset-0 sm:inset-y-0 sm:right-0 sm:left-auto z-50 flex flex-col bg-deep border-gold/20 shadow-elegant transition-transform duration-300
+          h-[100dvh] sm:h-full w-full sm:max-w-md
+          sm:rounded-none sm:border-l
           ${open ? "translate-y-0 sm:translate-x-0" : "translate-y-full sm:translate-y-0 sm:translate-x-full"}`}
         aria-hidden={!open}
         aria-label="Carrinho de pedidos"
