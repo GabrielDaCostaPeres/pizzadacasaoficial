@@ -21,6 +21,14 @@ export function CartDrawer() {
   const [showErrors, setShowErrors] = useState(false);
   const linkRef = useRef<HTMLAnchorElement>(null);
 
+  // Recalcula status de abertura a cada minuto
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+  const status = useMemo(() => getOpenStatus(now), [now]);
+
   const fee = 0;
   const grandTotal = total;
 
