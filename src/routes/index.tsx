@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CartProvider } from "@/cart/CartContext";
 import { Header } from "@/components/Header";
 import { CartDrawer } from "@/components/CartDrawer";
-import { CartBottomBar } from "@/components/CartBottomBar";
+
 import { Menu, WhatsAppFAB } from "@/components/Menu";
 import { Logo } from "@/components/Logo";
 import { WHATSAPP_DISPLAY, WHATSAPP_NUMBER } from "@/data/menu";
@@ -34,7 +34,6 @@ function Page() {
         <Contact />
         <Footer />
         <CartDrawer />
-        <CartBottomBar />
         <WhatsAppFAB />
       </div>
     </CartProvider>
