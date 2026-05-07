@@ -46,8 +46,7 @@ export function CartDrawer() {
     const itensTxt = lines
       .map(l => {
         const sub = brl(l.unitPrice * l.qty);
-        const noteLine = l.note ? `\n   _${l.note}_` : "";
-        return `• ${l.qty}x  ${l.name}  —  ${sub}${noteLine}`;
+        return `• ${l.qty}x  ${l.name}  —  ${sub}`;
       })
       .join("\n");
 
