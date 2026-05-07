@@ -122,10 +122,8 @@ export function CartDrawer() {
         aria-hidden={!open}
         aria-label="Carrinho de pedidos"
       >
-        {/* mobile grabber */}
-        <div className="sm:hidden flex justify-center pt-2 pb-1">
-          <span className="h-1 w-10 rounded-full bg-cream/20" />
-        </div>
+        {/* spacer for safe area on mobile */}
+        <div className="sm:hidden h-[env(safe-area-inset-top)]" />
 
         <header className="flex items-center justify-between px-5 pt-3 sm:pt-5 pb-4 border-b border-gold/15">
           <div className="flex items-center gap-2 min-w-0">
