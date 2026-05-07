@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useCart } from "@/cart/CartContext";
 import { brl, buildWhatsAppUrl } from "@/lib/format";
 import { WHATSAPP_NUMBER } from "@/data/menu";
-import { X, Plus, Minus, ShoppingBag, Trash2, MapPin, Wallet, MessageCircle, Check, ArrowLeft, ArrowRight } from "lucide-react";
+import { getOpenStatus } from "@/lib/schedule";
+import { X, Plus, Minus, ShoppingBag, Trash2, MapPin, Wallet, MessageCircle, Check, ArrowLeft, ArrowRight, Clock } from "lucide-react";
 
 type Mode = "entrega" | "retirada";
 type Step = "cart" | "checkout";
@@ -19,6 +20,14 @@ export function CartDrawer() {
   const [obs, setObs] = useState("");
   const [showErrors, setShowErrors] = useState(false);
   const linkRef = useRef<HTMLAnchorElement>(null);
+
+  // Recalcula status de abertura a cada minuto
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+  const status = useMemo(() => getOpenStatus(now), [now]);
 
   const fee = 0;
   const grandTotal = total;
@@ -90,6 +99,11 @@ export function CartDrawer() {
 
   function handleSendClick(e: React.MouseEvent<HTMLAnchorElement>) {
     if (lines.length === 0) { e.preventDefault(); return; }
+    if (!status.open) {
+      e.preventDefault();
+      window.alert(status.message);
+      return;
+    }
     if (Object.keys(errors).length > 0) {
       e.preventDefault();
       setShowErrors(true);
@@ -270,6 +284,13 @@ export function CartDrawer() {
               </div>
             </div>
 
+            {!status.open && (
+              <div className="mb-3 flex items-start gap-2 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2.5 text-[12px] leading-snug text-cream">
+                <Clock className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
+                <span>{status.message}</span>
+              </div>
+            )}
+
             {step === "cart" ? (
               <>
                 <button
@@ -292,17 +313,24 @@ export function CartDrawer() {
               <>
                 <a
                   ref={linkRef}
-                  href={waUrl}
+                  href={status.open ? waUrl : "#"}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleSendClick}
-                  className="flex items-center justify-center gap-2 w-full rounded-2xl gradient-gold text-[var(--primary-foreground)] font-semibold text-base py-4 sm:py-3.5 shadow-gold active:scale-[0.99] transition select-none"
+                  aria-disabled={!status.open}
+                  className={`flex items-center justify-center gap-2 w-full rounded-2xl font-semibold text-base py-4 sm:py-3.5 transition select-none ${
+                    status.open
+                      ? "gradient-gold text-[var(--primary-foreground)] shadow-gold active:scale-[0.99]"
+                      : "bg-cream/10 text-cream/40 cursor-not-allowed"
+                  }`}
                 >
                   <MessageCircle className="h-5 w-5" />
-                  Enviar pedido pelo WhatsApp
+                  {status.open ? "Enviar pedido pelo WhatsApp" : "Fora do horário de atendimento"}
                 </a>
                 <p className="text-[11px] text-cream/45 text-center mt-2">
-                  Você será redirecionado ao WhatsApp para confirmar o pedido.
+                  {status.open
+                    ? "Você será redirecionado ao WhatsApp para confirmar o pedido."
+                    : "Atendimento de terça a domingo, das 19h às 23h."}
                 </p>
                 <button
                   onClick={() => setStep("cart")}
