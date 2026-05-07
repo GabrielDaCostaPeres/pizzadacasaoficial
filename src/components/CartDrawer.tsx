@@ -282,7 +282,12 @@ export function CartDrawer() {
                   Finalizar pedido
                   <ArrowRight className="h-5 w-5" />
                 </button>
-                <button onClick={clear} className="w-full text-xs text-cream/40 hover:text-cream/70 py-2 mt-1">
+                <button
+                  onClick={() => {
+                    if (window.confirm("Tem certeza que deseja limpar todo o carrinho?")) clear();
+                  }}
+                  className="w-full text-xs text-cream/40 hover:text-cream/70 py-2 mt-1"
+                >
                   Limpar carrinho
                 </button>
               </>
