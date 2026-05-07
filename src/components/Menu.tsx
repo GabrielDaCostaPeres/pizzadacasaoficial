@@ -45,18 +45,17 @@ export function Menu() {
         </div>
 
         {/* Group tabs */}
-        <div className="sticky top-16 sm:top-20 z-20 -mx-3 sm:mx-0 mb-2 bg-gradient-to-b from-deep via-deep/98 to-deep/90 backdrop-blur-md border-y border-gold/30 shadow-elegant">
-          <div className="mx-auto max-w-4xl px-3 sm:px-4 py-3 sm:py-5">
-            <p className="text-center text-gold/80 text-[9px] sm:text-[11px] uppercase tracking-[0.4em] mb-2 sm:mb-3">Escolha uma categoria</p>
-            <div className="grid grid-cols-3 gap-1.5 sm:gap-2 rounded-full border-2 border-gold/50 bg-deep/80 p-1.5 sm:p-2 shadow-gold">
+        <div className="sticky top-16 sm:top-20 z-20 -mx-3 sm:mx-0 mb-1 bg-deep/95 backdrop-blur-md border-b border-gold/15">
+          <div className="mx-auto max-w-3xl px-3 sm:px-4 py-2 sm:py-3">
+            <div className="grid grid-cols-3 gap-1 rounded-full border border-gold/25 bg-cream/[0.03] p-1">
               {groups.map(g => (
                 <button
                   key={g.id}
                   onClick={() => setGroup(g.id)}
-                  className={`rounded-full py-2.5 sm:py-3.5 text-[11px] sm:text-sm font-bold uppercase tracking-wider transition-all leading-tight ${
+                  className={`rounded-full py-1.5 sm:py-2 text-[10px] sm:text-xs font-medium uppercase tracking-wider transition leading-tight ${
                     group === g.id
-                      ? "gradient-gold text-[var(--primary-foreground)] shadow-gold scale-[1.02]"
-                      : "text-cream/80 hover:text-gold hover:bg-cream/[0.04]"
+                      ? "bg-gold text-[var(--primary-foreground)] shadow-gold"
+                      : "text-cream/75 hover:text-gold"
                   }`}
                 >
                   {g.label}
