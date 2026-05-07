@@ -284,6 +284,13 @@ export function CartDrawer() {
               </div>
             </div>
 
+            {!status.open && (
+              <div className="mb-3 flex items-start gap-2 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2.5 text-[12px] leading-snug text-cream">
+                <Clock className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
+                <span>{status.message}</span>
+              </div>
+            )}
+
             {step === "cart" ? (
               <>
                 <button
