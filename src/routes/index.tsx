@@ -3,7 +3,7 @@ import { CartProvider } from "@/cart/CartContext";
 import { Header } from "@/components/Header";
 import { CartDrawerLazy } from "@/components/CartDrawer.lazy";
 
-import { Menu, WhatsAppFAB } from "@/components/Menu";
+import { MenuLazy, WhatsAppFABLazy } from "@/components/Menu.lazy";
 import { Logo } from "@/components/Logo";
 import { WHATSAPP_DISPLAY, WHATSAPP_NUMBER } from "@/data/contact";
 import { brl } from "@/lib/format";
@@ -29,12 +29,12 @@ function Page() {
         <Header />
         <Hero />
         <Highlights />
-        <Menu />
+        <MenuLazy />
         <About />
         <Contact />
         <Footer />
         <CartDrawerLazy />
-        <WhatsAppFAB />
+        <WhatsAppFABLazy />
       </div>
     </CartProvider>
   );
