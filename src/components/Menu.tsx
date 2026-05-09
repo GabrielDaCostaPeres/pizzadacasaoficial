@@ -45,7 +45,7 @@ export function Menu() {
         </div>
 
         {/* Group tabs */}
-        <div className="sticky top-16 sm:top-20 z-20 -mx-3 sm:mx-0 mb-1 bg-deep/95 backdrop-blur-md border-b border-gold/15">
+        <div className="sticky top-16 sm:top-20 z-20 -mx-3 sm:mx-0 mb-1 bg-deep/95 sm:backdrop-blur-md border-b border-gold/15">
           <div className="mx-auto max-w-3xl px-3 sm:px-4 py-2 sm:py-3">
             <div className="grid grid-cols-3 gap-1 rounded-full border border-gold/25 bg-cream/[0.03] p-1">
               {groups.map(g => (
@@ -66,7 +66,7 @@ export function Menu() {
         </div>
 
         {/* Sub-category chips */}
-        <div className="-mx-3 sm:mx-0 sticky top-[108px] sm:top-[136px] z-10 bg-deep/90 backdrop-blur-md mb-8 sm:mb-10">
+        <div className="-mx-3 sm:mx-0 sticky top-[108px] sm:top-[136px] z-10 bg-deep/95 sm:backdrop-blur-md mb-8 sm:mb-10">
           <div className="flex gap-2 overflow-x-auto scrollbar-hide px-3 sm:px-2 py-2 sm:py-3">
             {subCats.map(c => (
               <a
@@ -98,7 +98,7 @@ export function Menu() {
 
 function PizzaCategoryBlock({ cat, onAdd }: { cat: typeof pizzaCategories[number]; onAdd: (l: { id: string; name: string; unitPrice: number; note?: string }) => void }) {
   return (
-    <div id={cat.id} className="scroll-mt-44">
+    <div id={cat.id} className="scroll-mt-44 [content-visibility:auto] [contain-intrinsic-size:1px_900px]">
       {/* Vintage-style menu card */}
       <div className="relative rounded-2xl sm:rounded-[28px] border border-gold/30 bg-gradient-to-b from-cream/[0.06] via-cream/[0.03] to-transparent px-3 sm:px-10 py-6 sm:py-12 shadow-elegant">
         {/* Ornamental header */}
@@ -248,7 +248,7 @@ function PizzaRow({ pizza, cat, onAdd }: { pizza: { name: string; description: s
 
 function SimpleCategoryBlock({ cat, onAdd }: { cat: typeof otherCategories[number]; onAdd: (l: { id: string; name: string; unitPrice: number; note?: string }) => void }) {
   return (
-    <div id={cat.id} className="scroll-mt-44">
+    <div id={cat.id} className="scroll-mt-44 [content-visibility:auto] [contain-intrinsic-size:1px_700px]">
       <header className="text-center mb-8">
         {cat.subtitle && <p className="uppercase tracking-[0.3em] text-gold/80 text-[10px] mb-2">{cat.subtitle}</p>}
         <h3 className="font-display text-3xl sm:text-4xl text-cream">

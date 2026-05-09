@@ -21,12 +21,14 @@ export function CartDrawer() {
   const [showErrors, setShowErrors] = useState(false);
   const linkRef = useRef<HTMLAnchorElement>(null);
 
-  // Recalcula status de abertura a cada minuto
+  // Recalcula status de abertura a cada minuto, apenas enquanto o drawer está visível
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
+    if (!open) return;
+    setNow(new Date());
     const id = setInterval(() => setNow(new Date()), 60_000);
     return () => clearInterval(id);
-  }, []);
+  }, [open]);
   const status = useMemo(() => getOpenStatus(now), [now]);
 
   const fee = 0;
@@ -50,7 +52,7 @@ export function CartDrawer() {
   }, [name, address, mode]);
 
   const message = useMemo(() => {
-    if (lines.length === 0) return "";
+    if (!open || lines.length === 0) return "";
 
     const itensTxt = lines
       .map(l => {
@@ -92,7 +94,7 @@ export function CartDrawer() {
     linhas.push("_Pedido enviado pelo site._");
 
     return linhas.join("\n");
-  }, [lines, name, phone, mode, address, payment, troco, obs, total, fee, grandTotal]);
+  }, [open, lines, name, phone, mode, address, payment, troco, obs, total, fee, grandTotal]);
 
 
   const waUrl = useMemo(() => buildWhatsAppUrl(WHATSAPP_NUMBER, message), [message]);

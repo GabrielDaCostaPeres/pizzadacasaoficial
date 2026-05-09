@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CartProvider } from "@/cart/CartContext";
 import { Header } from "@/components/Header";
-import { CartDrawer } from "@/components/CartDrawer";
+import { CartDrawerLazy } from "@/components/CartDrawer.lazy";
 
 import { Menu, WhatsAppFAB } from "@/components/Menu";
 import { Logo } from "@/components/Logo";
@@ -33,7 +33,7 @@ function Page() {
         <About />
         <Contact />
         <Footer />
-        <CartDrawer />
+        <CartDrawerLazy />
         <WhatsAppFAB />
       </div>
     </CartProvider>
@@ -43,11 +43,11 @@ function Page() {
 function Hero() {
   return (
     <section className="relative overflow-hidden gradient-deep">
-      {/* decorative leaves */}
-      <div className="absolute -top-20 -right-20 w-[500px] h-[500px] opacity-[0.07] pointer-events-none">
+      {/* decorative leaves — apenas em telas maiores p/ não custar GPU em mobile */}
+      <div aria-hidden className="hidden sm:block absolute -top-20 -right-20 w-[500px] h-[500px] opacity-[0.07] pointer-events-none">
         <Leaf className="w-full h-full text-gold" strokeWidth={0.5} />
       </div>
-      <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] opacity-[0.05] pointer-events-none rotate-180">
+      <div aria-hidden className="hidden sm:block absolute -bottom-32 -left-32 w-[400px] h-[400px] opacity-[0.05] pointer-events-none rotate-180">
         <Leaf className="w-full h-full text-gold" strokeWidth={0.5} />
       </div>
 
