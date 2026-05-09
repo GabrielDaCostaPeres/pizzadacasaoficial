@@ -5,7 +5,7 @@ import { CartDrawerLazy } from "@/components/CartDrawer.lazy";
 
 import { Menu, WhatsAppFAB } from "@/components/Menu";
 import { Logo } from "@/components/Logo";
-import { WHATSAPP_DISPLAY, WHATSAPP_NUMBER } from "@/data/menu";
+import { WHATSAPP_DISPLAY, WHATSAPP_NUMBER } from "@/data/contact";
 import { brl } from "@/lib/format";
 import { Clock, MapPin, Phone, Flame, Leaf, Star } from "lucide-react";
 
