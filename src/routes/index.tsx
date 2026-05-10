@@ -51,17 +51,17 @@ function Hero() {
         <Leaf className="w-full h-full text-gold" strokeWidth={0.5} />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-32 md:py-40 text-center">
-        <p className="text-gold text-[10px] sm:text-sm uppercase tracking-[0.4em] mb-4 sm:mb-6 animate-in fade-in duration-700">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 py-8 sm:py-14 md:py-20 text-center">
+        <p className="text-gold text-[10px] sm:text-xs uppercase tracking-[0.4em] mb-3 sm:mb-4 animate-in fade-in duration-700">
           Tradição da casa
         </p>
-        <Logo priority className="mx-auto h-24 sm:h-40 md:h-48 w-auto animate-in fade-in zoom-in-95 duration-1000" />
+        <Logo priority className="mx-auto h-20 sm:h-28 md:h-32 w-auto animate-in fade-in zoom-in-95 duration-1000" />
 
-        <p className="mt-5 sm:mt-8 max-w-2xl mx-auto text-sm sm:text-xl text-cream/75 leading-relaxed font-serif italic px-2">
+        <p className="mt-4 sm:mt-5 max-w-2xl mx-auto text-sm sm:text-base text-cream/75 leading-relaxed font-serif italic px-2">
           Massa fermentada, ingredientes selecionados e o sabor inconfundível da casa.
         </p>
 
-        <div className="mt-7 sm:mt-10 flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center max-w-sm mx-auto sm:max-w-none">
+        <div className="mt-5 sm:mt-7 flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center max-w-sm mx-auto sm:max-w-none">
           <a
             href="#cardapio"
             className="inline-flex items-center justify-center rounded-full gradient-gold text-[var(--primary-foreground)] font-semibold px-7 py-3.5 text-sm shadow-gold active:scale-[0.98] sm:hover:scale-[1.02] transition"
