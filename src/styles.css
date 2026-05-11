@@ -39,18 +39,21 @@
   --font-sans: var(--font-sans);
 }
 
+/* Remove qualquer marca/overlay do Lovable */
 a[href*="lovable.dev"],
 iframe[src*="lovable.dev"],
-div[style*="Edit with Lovable"],
-.lovable-badge {
+div:has(a[href*="lovable.dev"]),
+div:has(textarea),
+.lovable-badge,
+[title*="Lovable"],
+[aria-label*="Lovable"] {
   display: none !important;
-  opacity: 0 !important;
   visibility: hidden !important;
+  opacity: 0 !important;
   pointer-events: none !important;
   position: absolute !important;
   z-index: -9999 !important;
 }
-
 
 :root {
   --radius: 0.75rem;
