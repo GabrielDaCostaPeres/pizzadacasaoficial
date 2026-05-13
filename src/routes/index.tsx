@@ -6,8 +6,7 @@ import { CartDrawerLazy } from "@/components/CartDrawer.lazy";
 import { MenuLazy, WhatsAppFABLazy } from "@/components/Menu.lazy";
 import { Logo } from "@/components/Logo";
 import { WHATSAPP_DISPLAY, WHATSAPP_NUMBER } from "@/data/contact";
-import { brl } from "@/lib/format";
-import { Clock, MapPin, Phone, Flame, Leaf, Star } from "lucide-react";
+import { Clock, MapPin, Phone, Flame, Leaf } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
