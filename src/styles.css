@@ -42,8 +42,6 @@
 /* Remove qualquer marca/overlay do Lovable */
 a[href*="lovable.dev"],
 iframe[src*="lovable.dev"],
-div:has(a[href*="lovable.dev"]),
-div:has(textarea),
 .lovable-badge,
 [title*="Lovable"],
 [aria-label*="Lovable"] {
