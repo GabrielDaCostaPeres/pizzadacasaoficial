@@ -1,4 +1,4 @@
-import logo from "@/assets/logo-mark.png";
+import logo from "@/assets/logo-mark.webp";
 
 export function Logo({ className = "h-12", priority = false }: { className?: string; priority?: boolean }) {
   return (
@@ -8,8 +8,9 @@ export function Logo({ className = "h-12", priority = false }: { className?: str
       className={className}
       loading={priority ? "eager" : "lazy"}
       decoding="async"
-      width={1536}
-      height={1024}
+      fetchPriority={priority ? "high" : "auto"}
+      width={768}
+      height={512}
     />
   );
 }
